@@ -1,0 +1,18 @@
+.login {
+  display: grid;
+  place-items: center;
+  height: 100vh;
+  background: url("../assets/img/Banner.jpg") center/cover no-repeat;
+  &__form{
+    min-width: 400px;
+    background: #ffffff;
+    padding: 35px;
+    h1{
+      font-style: italic;
+      color:#16a085;
+    }
+  }
+}
+.error{
+  color: red;
+}

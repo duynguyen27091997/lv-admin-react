@@ -1,0 +1,86 @@
+.aside{
+  width: 270px;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 98;
+  background: #1e1e2d;
+  color: #ffffff;
+  overflow-y: auto;
+  &__logo{
+    max-width: 100%;
+    padding: 10px 15px;
+    background-color: #1b1b28;
+    margin-bottom: 50px;
+    img{
+      width: 100%;
+    }
+  }
+  &__list{
+    padding-left: 0;
+    margin-bottom: 0;
+    li{
+      list-style: none;
+      a,span{
+        display: block;
+        text-decoration: none;
+        color: #95a5a6;
+        cursor: pointer;
+        padding: 12px 25px;
+        background-color: #1b1b28;
+        &:hover,&.active{
+          color: #ffffff;
+          i{
+            color: #5d78ff;
+          }
+        }
+      }
+      i{
+        font-size: 18px;
+        margin-right:10px;
+        &:nth-child(2){
+          display: inline-block;
+          margin-top: 5px;
+          float: right;
+          font-size: 13px;
+        }
+      }
+    }
+  }
+  &__sub-list{
+    font-size: 16px;
+    padding-left: 0;
+    li{
+      list-style: none;
+      a {
+        display: block;
+        text-decoration: none;
+        color: #95a5a6;
+        cursor: pointer;
+        padding: 10px 10px 10px 55px;
+        background-color: #1b1b28;
+        font-size: 15px;
+        &:hover, &.active {
+          color: #ffffff;
+          i{
+            color: #5d78ff;
+          }
+        }
+      }
+    }
+  }
+  &::-webkit-scrollbar-track
+  {
+  }
+
+  &::-webkit-scrollbar
+  {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb
+  {
+    background-color: #637099;
+  }
+}
