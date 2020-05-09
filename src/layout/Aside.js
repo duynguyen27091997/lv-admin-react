@@ -34,7 +34,7 @@ const menu = [
             {
                 text:'Danh sách người dùng',
                 icon:'las la-user-alt',
-                url:'/list-member'
+                url:'/list-users'
             }
         ]
     },

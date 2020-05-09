@@ -6,16 +6,18 @@ import Home from "../pages/Home";
 import ListCourses from "../pages/ListCourses";
 import Setting from "../pages/Setting";
 import ManageContents from "../pages/create/ManageContents";
+import ListUsers from "../pages/ListUsers";
 
 const Main = () => {
     return (
         <main>
             <Switch>
-                <Route exact path={'/create-courses'} component={CreateCourses}/>
-                <Route exact path={'/manage-contents'} component={ManageContents}/>
-                <Route exact path={'/list-courses'} component={ListCourses}/>
-                <Route exact path={'/setting'} component={Setting}/>
-                <Route exact path={'/'} component={Home}/>
+                <Route path={'/create-courses'} component={CreateCourses}/>
+                <Route path={'/manage-contents'} component={ManageContents}/>
+                <Route path={'/list-courses'} component={ListCourses}/>
+                <Route path={'/list-users'} component={ListUsers}/>
+                <Route path={'/setting'} component={Setting}/>
+                <Route path={'/'} component={Home}/>
                 <Route render={NotFound} />
             </Switch>
         </main>
