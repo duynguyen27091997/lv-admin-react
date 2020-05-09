@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import {logOut} from "../../actions/rootAction";
+import swal from "sweetalert";
+import {connect} from 'react-redux';
 
 class User extends Component {
     constructor(props) {
@@ -22,7 +25,7 @@ class User extends Component {
 
     closeMenu(event) {
 
-        if (!this.dropdownMenu.contains(event.target)) {
+        if (this.dropdownMenu && !this.dropdownMenu.contains(event.target)) {
 
             this.setState({ showMenu: false }, () => {
                 document.removeEventListener('click', this.closeMenu);
@@ -30,15 +33,24 @@ class User extends Component {
 
         }
     }
-
+    handleLogOut(){
+        this.props.logOut();
+        swal({
+            title: "Đăng xuất thành công !",
+            icon: "success",
+            button: false,
+            timer: 1500
+        }).then(r => r)
+    }
     render() {
+        let {user} = this.props;
         return (
             <div className={'user'}>
             <span className={'user__avatar'}>
                 <i className="las la-user-cog"/>
             </span>
                 <span className={'ml-3'} onClick={this.showMenu}>
-                Nguyen duy
+                {user && user.username}
                             <i className="ml-2 las la-caret-down"/>
 
             </span>
@@ -49,7 +61,7 @@ class User extends Component {
                                 this.dropdownMenu = element;
                             }}>
                                 <ul>
-                                    <li><i className="las la-power-off mr-2"/> Đăng xuất</li>
+                                    <li onClick={()=>this.handleLogOut()}><i className="las la-power-off mr-2"/> Đăng xuất</li>
                                 </ul>
 
                             </div>)
@@ -60,6 +72,14 @@ class User extends Component {
         );
     }
 }
-
-
-export default User;
+const mapDispatchToProps = dispatch =>{
+    return {
+        logOut : _=> dispatch(logOut())
+    }
+}
+const mapStateToProps = state =>{
+    return {
+        user : state.main.user
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(User);

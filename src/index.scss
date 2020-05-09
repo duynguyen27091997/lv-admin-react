@@ -426,9 +426,10 @@ label{
     position: absolute;
     background: #ffffff;
     color: #000000;
-    top: 94%;
+    top: 100%;
     right: 0;
-    box-shadow: 0 8px 6px -6px #bababa;
+    border-top: 3px solid #1e1e2d;
+    box-shadow: 0 8px 6px -6px rgba(186, 186, 186, 0.36);
     ul{
       text-align: center;
       margin: 0;
@@ -437,8 +438,15 @@ label{
     li{
       color: #1e1e2d;
       padding: 10px 30px;
+      white-space: nowrap;
       line-height: 1;
       list-style: none;
     }
   }
+}
+.swal-title{
+  margin-bottom: 15px;
+}
+.form-row{
+  margin-bottom: 15px;
 }

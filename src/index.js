@@ -3,18 +3,28 @@ import ReactDOM from 'react-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss';
-import App from './App';
 import * as serviceWorker from './serviceWorker';
-import {BrowserRouter, Switch, Route} from "react-router-dom";
-import Login from "./pages/Login";
+import {applyMiddleware, combineReducers, createStore} from "redux";
+import {composeWithDevTools} from 'redux-devtools-extension';
+import {Provider} from 'react-redux';
+import thunkMiddleware from 'redux-thunk';
+import rootReducer from "./reducer/rootReducer";
+import Startup from "./components/Startup";
+
+const store = createStore( combineReducers({
+        main:rootReducer
+    }),
+    composeWithDevTools(
+        applyMiddleware(
+            thunkMiddleware, // lets us dispatch() functions
+        ))
+);
 
 ReactDOM.render(
-        <BrowserRouter>
-            <Switch>
-                <Route path='/login' component={Login}/>
-                <Route path='/' component={App}/>
-            </Switch>
-        </BrowserRouter>,
+    <Provider store={store}>
+        <Startup>
+        </Startup>
+    </Provider>,
     document.getElementById('root')
 );
 

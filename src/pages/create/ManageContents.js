@@ -1,16 +1,33 @@
-import React, { useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Button, Row, Tab, Table, Tabs} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import ModalCreateQuiz from "../../components/modal/ModalCreateQuiz";
+import {AxiosUsBe} from "../../utils/axios";
+import {setAuth} from "../../actions/rootAction";
+import {sleep} from "../../helpers/helpers";
+import {useDispatch} from "react-redux";
 
 const ManageContents = () => {
     const [key, setKey] = useState('lesson');
 
     const [next, setNext] = useState(false);
-
-    function handleEdit() {
+    const [course, setCourse] = useState(false);
+    const [list,setList] = useState([])
+    function handleEdit(course) {
         setNext(!next);
+        setCourse(course)
     }
+    useEffect(_ => {
+        AxiosUsBe.get('api/course')
+            .then(({data: res}) => {
+                if (res.success) {
+                    setList(res.data);
+                }
+            })
+            .catch(err => {
+                setList([]);
+            })
+    }, [])
 
     const refModal = useRef(null);
 
@@ -24,7 +41,7 @@ const ManageContents = () => {
                 {
                     !next
                         ?
-                        <Table striped bordered hover variant={'dark'}>
+                        <Table>
                             <thead>
                             <tr>
                                 <th>ID</th>
@@ -36,48 +53,44 @@ const ManageContents = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                                <td className={'text-center'}><Button onClick={handleEdit} variant={'info'} size={"sm"}><i
-                                    className="las la-edit"/>Chỉnh sửa</Button></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                                <td>Thornton</td>
-                                <td className={'text-center'}><Button onClick={handleEdit} variant={'info'} size={"sm"}><i
-                                    className="las la-edit"/>Chỉnh sửa</Button></td>
-                            </tr>
+                            {
+                                list.map(course =><tr key={course.id}>
+                                    <td>{course.id}</td>
+                                    <td>{course.name}</td>
+                                    <td>{course['LanguageChallenges'][0]['title']}</td>
+                                    <td>{course.createdAt}</td>
+                                    <td>{course.authorId}</td>
+                                    <td className={'text-center'}><Button onClick={()=>handleEdit(course)} variant={'info'} size={"sm"}><i
+                                        className="las la-edit"/>Chỉnh sửa</Button></td>
+                                </tr>)
+                            }
                             </tbody>
                         </Table>
                         :
-                        <Tabs
-                            activeKey={key}
-                            onSelect={(k) => setKey(k)}
-                            id={'courseTabs'}>
-                            <Tab eventKey="lesson" title="Bài học">
-                                <Row className={'mt-4'}>
-                                    <Col sm={{span: 4}}>
-                                        <Button variant={'success'} onClick={handleShow} block={true}>Tạo</Button>
-                                    </Col>
-                                </Row>
-                            </Tab>
-                            <Tab eventKey="exercise" title="Luyện tập">
+                        <div>
+                            <Tabs
+                                activeKey={key}
+                                onSelect={(k) => setKey(k)}
+                                id={'courseTabs'}>
+                                <Tab eventKey="lesson" title="Bài học">
+                                    <Row className={'mt-4'}>
+                                        <Col sm={{span: 4}}>
+                                            <Button variant={'success'} onClick={handleShow} block={true}>Tạo</Button>
+                                        </Col>
+                                    </Row>
+                                </Tab>
+                                <Tab eventKey="exercise" title="Luyện tập">
 
-                            </Tab>
-                            <Tab eventKey="test" title="Kiểm tra">
+                                </Tab>
+                                <Tab eventKey="test" title="Kiểm tra">
 
-                            </Tab>
-                        </Tabs>
+                                </Tab>
+                            </Tabs>
+                            <Button style={{marginTop:'25px'}} variant={'outline-secondary'} onClick={()=>setNext(false)} size={"sm"}>Quay lại</Button>
+                        </div>
                 }
             </div>
-            <ModalCreateQuiz ref={refModal}/>
+            <ModalCreateQuiz course={course} ref={refModal}/>
         </div>
 
     );

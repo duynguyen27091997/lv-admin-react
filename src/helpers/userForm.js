@@ -1,13 +1,14 @@
 import {useEffect, useState} from 'react';
-const useForm = (stateSchema,callback,validate) =>{
+
+const useForm = (stateSchema, callback, validate) => {
     const [values, setValues] = useState(stateSchema);
     const [errors, setErrors] = useState(stateSchema);
     const [isSubmit, setIsSubmit] = useState(false);
     const handleChange = e => {
-        const {name,value} = e.target;
+        const {name, value} = e.target;
         setValues({
             ...values,
-            [name] : value
+            [name]: value
         })
     };
     const handleSubmit = (e) => {
@@ -16,15 +17,21 @@ const useForm = (stateSchema,callback,validate) =>{
         //validate all here
         setErrors(validate(values));
     };
-    useEffect(()=>{
+    const resetForm = (e) => {
+        setValues(stateSchema);
+        setErrors(stateSchema);
+    };
+    useEffect(() => {
         if (Object.keys(errors).length === 0 && isSubmit)
             callback()
-    },[callback, errors, isSubmit]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [errors, isSubmit]);
     return {
         handleChange,
         handleSubmit,
         values,
-        errors
+        errors,
+        resetForm
     }
 };
 export default useForm;
