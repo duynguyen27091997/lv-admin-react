@@ -30,18 +30,25 @@ const menu = [
                 text:'Danh sách khoá học',
                 icon:'las la-list',
                 url:'/list-courses'
-            },
-            {
-                text:'Danh sách người dùng',
-                icon:'las la-user-alt',
-                url:'/list-users'
             }
         ]
     },
     {
         text: 'Quản trị',
         icon:'las la-cog',
-        url:'/setting',
+        url:'',
+        subMenu:[
+            {
+                text:'Danh sách người dùng',
+                icon:'las la-user-alt',
+                url:'/list-users'
+            },
+            {
+                text:'Thêm người dùng',
+                icon:'las la-plus',
+                url:'/create-user'
+            }
+        ]
     }
 ];
 

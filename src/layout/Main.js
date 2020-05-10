@@ -7,6 +7,7 @@ import ListCourses from "../pages/ListCourses";
 import Setting from "../pages/Setting";
 import ManageContents from "../pages/create/ManageContents";
 import ListUsers from "../pages/ListUsers";
+import CreateUser from "../pages/create/CreateUser";
 
 const Main = () => {
     return (
@@ -16,6 +17,7 @@ const Main = () => {
                 <Route path={'/manage-contents'} component={ManageContents}/>
                 <Route path={'/list-courses'} component={ListCourses}/>
                 <Route path={'/list-users'} component={ListUsers}/>
+                <Route path={'/create-user'} component={CreateUser}/>
                 <Route path={'/setting'} component={Setting}/>
                 <Route path={'/'} component={Home}/>
                 <Route render={NotFound} />
