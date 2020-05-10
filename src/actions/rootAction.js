@@ -36,7 +36,7 @@ export const login = function (params) {
 export const createUser = function (params) {
     return dispatch => {
         return new Promise((resolve, reject) => {
-            AxiosAdBe.post('/api/create-user', qs.stringify(params))
+            AxiosAdBe.post('/api/user', qs.stringify(params))
                 .then(res => {
                     resolve(res)
                 })

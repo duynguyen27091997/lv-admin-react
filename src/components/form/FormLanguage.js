@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Form} from "react-bootstrap";
 
 const FormLanguage = ({languageId = 0,onChange}) => {
     return (
-        <Form.Control defaultValue={0} name={'languageId'} as="select" placeholder={'Chọn khoá học...'} value={languageId} onChange={(e)=>onChange(e)}>
+        <Form.Control name={'languageId'} as="select" placeholder={'Chọn khoá học...'} value={languageId} onChange={(e)=>onChange(e)}>
             <option value={0} disabled={true}>Chọn khoá học...</option>
             <option value={1}>Javascript</option>
             <option value={2}>C</option>
