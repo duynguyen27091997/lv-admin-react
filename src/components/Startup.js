@@ -27,6 +27,7 @@ const Startup = (props) => {
             .finally(_ => {
                 sleep(1000).then(_ => setLoading(false))
             })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     if (!loading)
         return (

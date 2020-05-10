@@ -3,11 +3,11 @@ import {Button, Row, Tab, Table, Tabs} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import ModalCreateQuiz from "../../components/modal/ModalCreateQuiz";
 import {AxiosUsBe} from "../../utils/axios";
-import {setAuth} from "../../actions/rootAction";
-import {sleep} from "../../helpers/helpers";
-import {useDispatch} from "react-redux";
+import {toDateString} from "../../helpers/helpers";
+import {useSelector} from "react-redux";
 
 const ManageContents = () => {
+    const auth = useSelector(state => state.main.user);
     const [key, setKey] = useState('lesson');
 
     const [next, setNext] = useState(false);
@@ -18,7 +18,7 @@ const ManageContents = () => {
         setCourse(course)
     }
     useEffect(_ => {
-        AxiosUsBe.get('api/course')
+        AxiosUsBe.get(`/api/course-by-user/${auth.id}`)
             .then(({data: res}) => {
                 if (res.success) {
                     setList(res.data);
@@ -58,8 +58,7 @@ const ManageContents = () => {
                                     <td>{course.id}</td>
                                     <td>{course.name}</td>
                                     <td>{course['LanguageChallenges'][0]['title']}</td>
-                                    <td>{course.createdAt}</td>
-                                    <td>{course.authorId}</td>
+                                    <td>{toDateString(course.createdAt)}</td>
                                     <td className={'text-center'}><Button onClick={()=>handleEdit(course)} variant={'info'} size={"sm"}><i
                                         className="las la-edit"/>Chỉnh sửa</Button></td>
                                 </tr>)

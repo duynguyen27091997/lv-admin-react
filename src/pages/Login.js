@@ -10,6 +10,7 @@ import {useHistory} from 'react-router-dom';
 
 const Login = () => {
     let [resErr, setResErr] = useState('');
+    let [saveLogin, setSaveLogin] = useState(false);
     let user = useSelector(state => state.main.user);
     const dispatch = useDispatch();
     const history = useHistory();
@@ -21,6 +22,7 @@ const Login = () => {
     useEffect(_ => {
         if (Object.keys(user).length !== 0)
             history.push('/')
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user])
     const {handleChange, handleSubmit, values, errors} = useForm(stateSchema, submit, validate);
 
@@ -28,10 +30,17 @@ const Login = () => {
         dispatch(login({username: values.username, password: values.password}))
             .then(({data: res}) => {
                 try {
-                    let {token} = res.data.user;
-                    localStorage.setItem('token', token)
+                    if (saveLogin){
+                        let {token} = res.data.user;
+                        localStorage.setItem('token', token)
+                    }
                 } catch (e) {
-
+                    swal({
+                        title: "Có lỗi xảy ra trong quá trình đăng nhập",
+                        icon: "fail",
+                        button: false,
+                        timer: 1500
+                    }).then(r => r)
                 }
                 if (res.success) {
                     swal({
@@ -46,7 +55,12 @@ const Login = () => {
                 }
             })
             .catch(err => {
-                console.log(err)
+                swal({
+                    title: "Có lỗi xảy ra trong quá trình đăng nhập",
+                    icon: "fail",
+                    button: false,
+                    timer: 1500
+                }).then(r => r)
             })
     }
 
@@ -84,7 +98,7 @@ const Login = () => {
                         }
                     </Form.Group>
                     <Form.Group>
-                        <Form.Check style={{fontSize: '15px'}} className={'text-muted'} type="checkbox"
+                        <Form.Check value={saveLogin} style={{fontSize: '15px'}} className={'text-muted'} type="checkbox" onChange={(e) => setSaveLogin(e.target.value)}
                                     label="Nhớ tài khoản"/>
                     </Form.Group>
                     <Button onClick={handleSubmit} style={{background: '#5d78ff'}} type="submit" block={true}>
