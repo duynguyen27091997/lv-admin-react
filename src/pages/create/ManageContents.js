@@ -27,7 +27,7 @@ const ManageContents = () => {
             .catch(err => {
                 setList([]);
             })
-    }, [])
+    }, [auth.id])
 
     const refModal = useRef(null);
 
