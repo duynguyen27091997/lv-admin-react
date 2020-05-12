@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch} from "react-redux";
-import {AxiosAdBe} from "../utils/axios";
+import {AxiosAdBe, AxiosUsBe} from "../utils/axios";
 import {setAuth} from "../actions/rootAction";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import Login from "../pages/Login";
@@ -19,6 +19,8 @@ const Startup = (props) => {
             .then(({data: res}) => {
                 if (res.success) {
                     dispatch(setAuth(res.data.user));
+                    AxiosUsBe.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+                    AxiosAdBe.defaults.headers.common = {'Authorization': `Bearer ${token}`}
                 }
             })
             .catch(err => {

@@ -1,0 +1,28 @@
+.object {
+  h6 {
+    padding: 10px 15px;
+    background: #2980b9;
+    color: #ffffff;
+    margin-bottom: 15px;
+  }
+
+  span {
+    padding: 4px 10px;
+    margin: 3px;
+    color: #ffffff;
+    border:1px solid #16a085;
+    background: #16a085;
+    &.object__create{
+      border: 1px solid;
+      color: #16a085;
+      background: #ffffff;
+    }
+  }
+}
+.object__create{
+  cursor: pointer;
+  border: 1px solid;
+  color: #16a085;
+  background: #ffffff;
+  padding: 4px;
+}

@@ -44,7 +44,7 @@ const ManageContents = () => {
                             <td>{toDateString(course.createdAt)}</td>
                             <td>
                                 <div><Link variant={'info'} size={"sm"} to={`/manage-contents/${course.id}`}><i
-                                    className="las la-edit"/>Chỉnh sửa</Link>
+                                    className="las la-edit"/>Nội dung</Link>
                                 </div>
                             </td>
                         </tr>)

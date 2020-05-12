@@ -8,6 +8,9 @@
   background: #1e1e2d;
   color: #ffffff;
   overflow-y: auto;
+  a,span{
+    cursor: pointer;
+  }
   &__logo{
     max-width: 100%;
     padding: 10px 15px;

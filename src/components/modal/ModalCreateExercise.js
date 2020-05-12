@@ -8,7 +8,7 @@ import qs from 'querystring';
 import {useSelector} from "react-redux";
 import swal from "sweetalert";
 
-const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => {
+const ModalCreateExercise = forwardRef(({course, level = 1,number=1,add}, ref) => {
     const user = useSelector(state=>state.main.user);
     const [show, setShow] = useState(false);
     const [code, setCode] = useState(``);
@@ -42,7 +42,7 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
 
         let payload = {
             levelId: level,
-            kindChallengeId: 1,
+            kindChallengeId: 2,
             title: values.title,
             sequenceNumber: number,
             questionSen: values.questionSen,
@@ -59,7 +59,7 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
                 add(res.data.data)
                 resetForm();
                 swal({
-                    title: 'Tạo câu hỏi thành công !',
+                    title: 'Tạo bài tập thành công !',
                     icon: 'success',
                     button: false,
                     timer: 1500
@@ -169,4 +169,4 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
     );
 });
 
-export default ModalCreateQuiz;
+export default ModalCreateExercise;
