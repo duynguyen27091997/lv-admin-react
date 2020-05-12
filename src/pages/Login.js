@@ -7,6 +7,7 @@ import useForm from "../helpers/userForm";
 import {login} from "../actions/rootAction";
 import {useDispatch, useSelector} from 'react-redux';
 import {useHistory} from 'react-router-dom';
+import {AxiosAdBe, AxiosUsBe} from "../utils/axios";
 
 const Login = () => {
     let [resErr, setResErr] = useState('');
@@ -32,6 +33,8 @@ const Login = () => {
                 try {
                     if (saveLogin){
                         let {token} = res.data.user;
+                        AxiosUsBe.defaults.headers.common = {'Authorization': `Bearer ${token}`}
+                        AxiosAdBe.defaults.headers.common = {'Authorization': `Bearer ${token}`}
                         localStorage.setItem('token', token)
                     }
                 } catch (e) {

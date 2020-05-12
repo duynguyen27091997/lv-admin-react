@@ -8,7 +8,7 @@ import qs from 'querystring';
 import {useSelector} from "react-redux";
 import swal from "sweetalert";
 
-const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => {
+const ModalCreateAssessment = forwardRef(({course, level = 1,number=1,add}, ref) => {
     const user = useSelector(state=>state.main.user);
     const [show, setShow] = useState(false);
     const [code, setCode] = useState(``);
@@ -17,6 +17,7 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
     const handleShow = () => setShow(true);
 
     const stateSchema = {
+        kindChallengeId: 0,
         title: '',
         questionSen: '',
         tutorial: '',
@@ -26,6 +27,9 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
     const validate = () => {
         let errors = {};
         //validate email
+        if (!values.kindChallengeId)
+            errors.kindChallengeId = 'Bắt buộc chọn loại câu hỏi !';
+
         if (!values.title)
             errors.title = 'Tiêu đề không được để trống !';
 
@@ -42,9 +46,10 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
 
         let payload = {
             levelId: level,
-            kindChallengeId: 1,
+            kindChallengeId: values.kindChallengeId,
             title: values.title,
             sequenceNumber: number,
+            keyOnlyAssessment:1,
             questionSen: values.questionSen,
             tutorial: values.tutorial,
             result: values.result,
@@ -56,10 +61,10 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
         AxiosUsBe.post('/api/quiz', qs.stringify(payload))
             .then(({data:res}) => {
                 handleClose();
-                add(res.data.data)
+                // add(res.data.data)
                 resetForm();
                 swal({
-                    title: 'Tạo câu hỏi thành công !',
+                    title: 'Tạo bài tập thành công !',
                     icon: 'success',
                     button: false,
                     timer: 1500
@@ -109,9 +114,26 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
                                         </Form.Text> : null
                                     }
                                 </Col>
+                            </Form.Row>
+                            <Form.Row>
                                 <Col>
                                     <Form.Label>Bài</Form.Label>
                                     <Form.Control value={level} disabled={true}/>
+                                </Col>
+                                <Col>
+                                    <Form.Label>Loại câu hỏi</Form.Label>
+                                    <Form.Control name={'kindChallengeId'} as="select"
+                                                  value={values.kindChallengeId}
+                                                  onChange={handleChange}>
+                                        <option value={0} disabled={true}>Chọn loại câu hỏi...</option>
+                                        <option value={1}>Chọn đáp án đúng</option>
+                                        <option value={2}>Viết code đúng</option>
+                                    </Form.Control>
+                                    {
+                                        errors['kindChallengeId'] ? <Form.Text className="error">
+                                            {errors['kindChallengeId']}
+                                        </Form.Text> : null
+                                    }
                                 </Col>
                             </Form.Row>
                             <Form.Row className={'mt-2'}>
@@ -169,4 +191,4 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
     );
 });
 
-export default ModalCreateQuiz;
+export default ModalCreateAssessment;
