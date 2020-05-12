@@ -1,22 +1,14 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Button, Row, Tab, Table, Tabs} from "react-bootstrap";
-import Col from "react-bootstrap/Col";
-import ModalCreateQuiz from "../../components/modal/ModalCreateQuiz";
+import React, {useEffect, useState} from 'react';
+import {Table} from "react-bootstrap";
+
 import {AxiosUsBe} from "../../utils/axios";
 import {toDateString} from "../../helpers/helpers";
 import {useSelector} from "react-redux";
+import {Link} from "react-router-dom";
 
 const ManageContents = () => {
     const auth = useSelector(state => state.main.user);
-    const [key, setKey] = useState('lesson');
-
-    const [next, setNext] = useState(false);
-    const [course, setCourse] = useState(false);
-    const [list,setList] = useState([])
-    function handleEdit(course) {
-        setNext(!next);
-        setCourse(course)
-    }
+    const [list, setList] = useState([])
     useEffect(_ => {
         AxiosUsBe.get(`/api/course-by-user/${auth.id}`)
             .then(({data: res}) => {
@@ -29,67 +21,37 @@ const ManageContents = () => {
             })
     }, [auth.id])
 
-    const refModal = useRef(null);
-
-    const handleShow = () => {
-        refModal.current.show()
-    };
     return (
         <div className={'content edit-content'}>
             <div className={'box'}>
                 <h1 className={'title'}>Quản lí khoá học <i className="las la-angle-right"/> Quản lí nội dung</h1>
-                {
-                    !next
-                        ?
-                        <Table>
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tên khoá học</th>
-                                <th>Ngôn ngữ lập trình</th>
-                                <th>Ngày tạo</th>
-                                <th>Người tạo</th>
-                                <th/>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {
-                                list.map(course =><tr key={course.id}>
-                                    <td>{course.id}</td>
-                                    <td>{course.name}</td>
-                                    <td>{course['LanguageChallenges'][0]['title']}</td>
-                                    <td>{toDateString(course.createdAt)}</td>
-                                    <td className={'text-center'}><Button onClick={()=>handleEdit(course)} variant={'info'} size={"sm"}><i
-                                        className="las la-edit"/>Chỉnh sửa</Button></td>
-                                </tr>)
-                            }
-                            </tbody>
-                        </Table>
-                        :
-                        <div>
-                            <Tabs
-                                activeKey={key}
-                                onSelect={(k) => setKey(k)}
-                                id={'courseTabs'}>
-                                <Tab eventKey="lesson" title="Bài học">
-                                    <Row className={'mt-4'}>
-                                        <Col sm={{span: 4}}>
-                                            <Button variant={'success'} onClick={handleShow} block={true}>Tạo</Button>
-                                        </Col>
-                                    </Row>
-                                </Tab>
-                                <Tab eventKey="exercise" title="Luyện tập">
-
-                                </Tab>
-                                <Tab eventKey="test" title="Kiểm tra">
-
-                                </Tab>
-                            </Tabs>
-                            <Button style={{marginTop:'25px'}} variant={'outline-secondary'} onClick={()=>setNext(false)} size={"sm"}>Quay lại</Button>
-                        </div>
-                }
+                <Table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên khoá học</th>
+                        <th>Ngôn ngữ lập trình</th>
+                        <th>Ngày tạo</th>
+                        <th/>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        list.map(course => <tr key={course.id}>
+                            <td>{course.id}</td>
+                            <td>{course.name}</td>
+                            <td>{course['LanguageChallenges'][0]['title']}</td>
+                            <td>{toDateString(course.createdAt)}</td>
+                            <td>
+                                <div><Link variant={'info'} size={"sm"} to={`/manage-contents/${course.id}`}><i
+                                    className="las la-edit"/>Chỉnh sửa</Link>
+                                </div>
+                            </td>
+                        </tr>)
+                    }
+                    </tbody>
+                </Table>
             </div>
-            <ModalCreateQuiz course={course} ref={refModal}/>
         </div>
 
     );
