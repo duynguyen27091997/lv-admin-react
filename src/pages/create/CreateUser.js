@@ -77,7 +77,7 @@ const CreateUser = () => {
             {
                 (auth.roleId === 1) ?
                     <div className={'box'}>
-                        <h4 className={'title mb-4'}>Quản trị <i className="las la-angle-right"/> Thêm thành viên</h4>
+                        <h4 className={'title mb-4'}>Quản trị <i className="las la-angle-right"/>  Thêm thành viên</h4>
                         <Container className={'mt-5'} fluid={true}>
                             {resErr && <Alert variant="danger" onClose={() => setResErr('')} dismissible>
                                 <span>{resErr}</span>

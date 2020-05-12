@@ -8,13 +8,15 @@ import Setting from "../pages/Setting";
 import ManageContents from "../pages/create/ManageContents";
 import ListUsers from "../pages/ListUsers";
 import CreateUser from "../pages/create/CreateUser";
+import Course from "../pages/Course";
 
 const Main = () => {
     return (
         <main>
             <Switch>
-                <Route path={'/create-courses'} component={CreateCourses}/>
-                <Route path={'/manage-contents'} component={ManageContents}/>
+                <Route exact path={'/create-courses'} component={CreateCourses}/>
+                <Route exact path={'/manage-contents'} component={ManageContents}/>
+                <Route exact path={'/manage-contents/:courseId'} component={Course}/>
                 <Route path={'/list-courses'} component={ListCourses}/>
                 <Route path={'/list-users'} component={ListUsers}/>
                 <Route path={'/create-user'} component={CreateUser}/>
