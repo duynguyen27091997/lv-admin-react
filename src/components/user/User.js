@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {logOut} from "../../actions/rootAction";
 import swal from "sweetalert";
 import {connect} from 'react-redux';
+import {AxiosAdBe, AxiosUsBe} from "../../utils/axios";
 
 class User extends Component {
     constructor(props) {
@@ -35,6 +36,9 @@ class User extends Component {
     }
     handleLogOut(){
         this.props.logOut();
+        localStorage.removeItem('token');
+        delete AxiosAdBe.defaults.headers.common["Authorization"]
+        delete AxiosUsBe.defaults.headers.common["Authorization"]
         swal({
             title: "Đăng xuất thành công !",
             icon: "success",

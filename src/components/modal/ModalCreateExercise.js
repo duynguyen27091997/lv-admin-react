@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {Button, Form, Modal, Row} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Editor from "../editor/Editor";
@@ -12,6 +12,8 @@ const ModalCreateExercise = forwardRef(({course, level = 1,number=1,add}, ref) =
     const user = useSelector(state=>state.main.user);
     const [show, setShow] = useState(false);
     const [code, setCode] = useState(``);
+    const [seNumber, setSeNumber] = useState(number);
+
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -22,6 +24,10 @@ const ModalCreateExercise = forwardRef(({course, level = 1,number=1,add}, ref) =
         tutorial: '',
         result: ''
     };
+
+    useEffect(_=>{
+        setSeNumber(number);
+    },[number])
 
     const validate = () => {
         let errors = {};
@@ -44,7 +50,7 @@ const ModalCreateExercise = forwardRef(({course, level = 1,number=1,add}, ref) =
             levelId: level,
             kindChallengeId: 2,
             title: values.title,
-            sequenceNumber: number,
+            sequenceNumber: seNumber,
             questionSen: values.questionSen,
             tutorial: values.tutorial,
             result: values.result,
@@ -109,9 +115,15 @@ const ModalCreateExercise = forwardRef(({course, level = 1,number=1,add}, ref) =
                                         </Form.Text> : null
                                     }
                                 </Col>
+                            </Form.Row>
+                            <Form.Row>
                                 <Col>
                                     <Form.Label>Bài</Form.Label>
                                     <Form.Control value={level} disabled={true}/>
+                                </Col>
+                                <Col>
+                                    <Form.Label>Thứ tự</Form.Label>
+                                    <Form.Control type={'number'} min={0} max={20} name={'sequenceNumber'} value={seNumber} onChange={e => setSeNumber(e.target.value)}/>
                                 </Col>
                             </Form.Row>
                             <Form.Row className={'mt-2'}>
