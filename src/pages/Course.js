@@ -7,6 +7,7 @@ import {AxiosUsBe} from "../utils/axios";
 import {useSelector} from "react-redux";
 import ModalCreateExercise from "../components/modal/ModalCreateExercise";
 import ModalCreateAssessment from "../components/modal/ModalCreateAssessment";
+import FormAssessment from "../components/form/FormAssessment";
 
 const Course = (props) => {
     const user = useSelector(state => state.main.user);
@@ -22,7 +23,6 @@ const Course = (props) => {
     const [course, setCourse] = useState(null);
     const refModalQz = useRef(null);
     const refModalEx = useRef(null);
-    const refModalTest = useRef(null);
 
     const handleShow = (level, number) => {
         setLevel(level)
@@ -34,11 +34,7 @@ const Course = (props) => {
         setNumber(number)
         refModalEx.current.show()
     };
-    const handleShowTest = (level, number) => {
-        setLevel(level)
-        setNumber(number)
-        refModalTest.current.show()
-    };
+
     const addQuiz = (quiz) => {
         setListQuiz([...listQuiz, quiz])
     }
@@ -134,17 +130,7 @@ const Course = (props) => {
                                 </Tab>
                                 <Tab eventKey="test" title="Kiểm tra">
                                     <div className={'my-4'}>
-                                        <Row>
-                                            <Col>
-                                                <Form.Label>Chọn câu hỏi</Form.Label>
-                                                <Form.Control placeholder="Chọn câu hỏi ..." name={'title'} />
-                                            </Col>
-                                            <Col>
-                                                <Form.Label>Tạo mới</Form.Label>
-                                                <div onClick={()=>handleShowTest()} className={'object__create w-100 text-center'}><i
-                                                    className="las la-plus"/></div>
-                                            </Col>
-                                        </Row>
+                                        <FormAssessment course={course} />
                                     </div>
                                 </Tab>
                             </Tabs>
@@ -152,8 +138,6 @@ const Course = (props) => {
                                                  add={(quiz) => addExercise(quiz)}/>
                             <ModalCreateQuiz level={level} number={number} course={course} ref={refModalQz}
                                              add={(quiz) => addQuiz(quiz)}/>
-                            <ModalCreateAssessment level={level} number={number} course={course} ref={refModalTest}
-                                             />
                         </div>
                         :
                         <div className={'box p-4 text-center'}>

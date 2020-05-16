@@ -8,11 +8,10 @@ import qs from 'querystring';
 import {useSelector} from "react-redux";
 import swal from "sweetalert";
 
-const ModalCreateAssessment = forwardRef(({course, level = 1,number=1,add}, ref) => {
+const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
     const user = useSelector(state=>state.main.user);
     const [show, setShow] = useState(false);
     const [code, setCode] = useState(``);
-    const [seNumber, setSeNumber] = useState(number);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -24,10 +23,6 @@ const ModalCreateAssessment = forwardRef(({course, level = 1,number=1,add}, ref)
         tutorial: '',
         result: ''
     };
-
-    useEffect(_=>{
-        setSeNumber(number);
-    },[number])
 
     const validate = () => {
         let errors = {};
@@ -50,11 +45,11 @@ const ModalCreateAssessment = forwardRef(({course, level = 1,number=1,add}, ref)
     const submit = () => {
 
         let payload = {
-            levelId: level,
             kindChallengeId: values.kindChallengeId,
             title: values.title,
-            sequenceNumber: seNumber,
+            assessmentId: test.id,
             keyOnlyAssessment:1,
+            levelId:1,
             questionSen: values.questionSen,
             tutorial: values.tutorial,
             result: values.result,
@@ -63,10 +58,10 @@ const ModalCreateAssessment = forwardRef(({course, level = 1,number=1,add}, ref)
             authorId: user.id,
             code: `${code}`
         }
-        AxiosUsBe.post('/api/quiz', qs.stringify(payload))
+        AxiosUsBe.post('/api/create-assessment', qs.stringify(payload))
             .then(({data:res}) => {
                 handleClose();
-                // add(res.data.data)
+                add(res.data.data)
                 resetForm();
                 swal({
                     title: 'Tạo bài tập thành công !',
@@ -121,14 +116,6 @@ const ModalCreateAssessment = forwardRef(({course, level = 1,number=1,add}, ref)
                                 </Col>
                             </Form.Row>
                             <Form.Row>
-                                <Col>
-                                    <Form.Label>Bài</Form.Label>
-                                    <Form.Control value={level} disabled={true}/>
-                                </Col>
-                                <Col>
-                                    <Form.Label>Thứ tự</Form.Label>
-                                    <Form.Control type={'number'} min={0} max={20} name={'sequenceNumber'} value={seNumber} onChange={e => setSeNumber(e.target.value)}/>
-                                </Col>
                                 <Col>
                                     <Form.Label>Loại câu hỏi</Form.Label>
                                     <Form.Control name={'kindChallengeId'} as="select"
