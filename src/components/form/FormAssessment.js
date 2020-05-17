@@ -57,6 +57,7 @@ const FormAssessment = ({course}) => {
                         timer: 1500,
                         button: false
                     }).then(r => r)
+                    setListTest([...listTest,res.data])
                     resetForm();
                 } else {
 
@@ -68,7 +69,7 @@ const FormAssessment = ({course}) => {
     }
     useEffect(_ => {
         if (test) {
-            AxiosUsBe.get(`/api/list-quiz-assessment?userId=${user.id}&courseId=${course.id}`)
+            AxiosUsBe.get(`/api/quiz-by-assessment/${test.id}`)
                 .then(({data: res}) => {
                     setListQuiz(res.data)
                 })
@@ -108,7 +109,7 @@ const FormAssessment = ({course}) => {
                                         <td>{toDateString(test['createdAt'])}</td>
                                         <td className={'text-center'}><Button variant={'info'} size={"sm"}
                                                                               onClick={() => setTest(test)}><i
-                                            className="las la-edit"/>Chỉnh sửa</Button></td>
+                                            className="las la-edit mr-0"/></Button></td>
                                     </tr>)
                                 }
 
@@ -149,9 +150,10 @@ const FormAssessment = ({course}) => {
                         <Row>
                             <Col>
                                 <div className={"object my-3"}>
-                                    {/*{*/}
-                                    {/*    listQuiz.length ? listQuiz.map(quiz => <span key={quiz.id}>{quiz.title}</span>) : null*/}
-                                    {/*}*/}
+                                    {
+                                        listQuiz ? listQuiz.map(quiz => <span key={quiz.id}>{quiz.title}</span>) :
+                                            <p className={'text-center'}>Chưa có câu hỏi nào được tạo .</p>
+                                    }
                                 </div>
                             </Col>
                         </Row>

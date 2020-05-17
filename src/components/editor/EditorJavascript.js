@@ -8,17 +8,18 @@ import "ace-builds/src-noconflict/ext-language_tools";
 
 
 const EditorJavascript = (props) => {
-    const [code,setCode]= useState( `function onLoad(editor) {
+    const [code,setCode]= useState( props.code || "")
 
-    console.log("i've loaded");
-    
-}`)
     useEffect(_=>{
-        props.onChange(code)
-    },[code, props])
+        setCode(props.code)
+        props.onChange(props.code)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[props.code])
 
     const handleChange = (value)=>{
         setCode(value);
+        props.onChange(value)
+
     }
     return (
         <AceEditor
@@ -28,6 +29,7 @@ const EditorJavascript = (props) => {
             fontSize={16}
             showPrintMargin={true}
             onChange={handleChange}
+            readOnly={props.readOnly}
             showGutter={true}
             width={'100%'}
             highlightActiveLine={true}

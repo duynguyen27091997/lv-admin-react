@@ -1,13 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
 import "./course.scss"
-import {Col, Form, Row, Tab, Tabs} from "react-bootstrap";
+import {Tab, Tabs} from "react-bootstrap";
 import ModalCreateQuiz from "../components/modal/ModalCreateQuiz";
 import errorImg from "../assets/img/interface.png";
 import {AxiosUsBe} from "../utils/axios";
 import {useSelector} from "react-redux";
 import ModalCreateExercise from "../components/modal/ModalCreateExercise";
-import ModalCreateAssessment from "../components/modal/ModalCreateAssessment";
+
 import FormAssessment from "../components/form/FormAssessment";
+import Quiz from "../components/Quiz";
+import swal from "sweetalert";
+import qs from "querystring";
 
 const Course = (props) => {
     const user = useSelector(state => state.main.user);
@@ -40,6 +43,86 @@ const Course = (props) => {
     }
     const addExercise = (quiz) => {
         setListExercise([...listExercise, quiz])
+    }
+    const handleDelete = (e,quiz,type=1)=>{
+        swal({
+            title: "Bạn có chắc muốn xoá khoá học",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(r => {
+            if (r) {
+                AxiosUsBe.delete(`/api/quiz/${quiz.id}`)
+                    .then(({data: res}) => {
+                        if (res.success) {
+                            swal({
+                                title: "Xoá câu hỏi thành công",
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then()
+                            if (type===1) {
+                                setListQuiz([...listQuiz.filter(item => item.id !== quiz.id)]);
+                            }else{
+                                setListExercise([...listExercise.filter(item => item.id !== quiz.id)]);
+                            }
+                        }
+                    })
+            }
+        })
+    }
+    const handleEdit = (payload,type=1)=>{
+        if (type===1) {
+            let currentIndex = listQuiz.findIndex(item => item.id === payload.id);
+            let newListUser = [...listQuiz];
+            newListUser.splice(currentIndex,1,payload);
+            setListQuiz(newListUser);
+        }else{
+            let currentIndex = listExercise.findIndex(item => item.id === payload.id);
+            let newListUser = [...listExercise];
+            newListUser.splice(currentIndex,1,payload);
+            setListExercise(newListUser);
+        }
+    }
+    const handleActive = (e,quiz,type)=>{
+        e.preventDefault();
+        let isTrueSet = e.target.value === 'true';
+        let payload = {
+            id: quiz.id,
+            status: !isTrueSet,
+            keyName: 'quiz'
+        }
+        swal({
+            title: "Bạn có chắc muốn thay đổi trạng thái khoá học",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(r => {
+            if (r) {
+                AxiosUsBe.put('/api/change-state-part', qs.stringify(payload))
+                    .then(({data: res}) => {
+                        if (res.success) {
+                            swal({
+                                title: "Thao tác thành công !",
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then()
+                            if (type===1) {
+                                let currentIndex = listQuiz.findIndex(item => item.id === quiz.id);
+                                let newListUser = [...listQuiz];
+                                newListUser[currentIndex].active = !isTrueSet;
+                                setListQuiz(newListUser);
+                            }else{
+                                let currentIndex = listExercise.findIndex(item => item.id === quiz.id);
+                                let newListUser = [...listExercise];
+                                newListUser[currentIndex].active = !isTrueSet;
+                                setListExercise(newListUser);
+                            }
+                        }
+                    })
+            }
+        })
     }
     //init page
     useEffect(_ => {
@@ -94,7 +177,7 @@ const Course = (props) => {
                                                     <h6>Bài {level}</h6>
                                                     {
                                                         (listQuiz.filter(quiz => quiz.levelId === level)).map((quiz, index, list) =>
-                                                            <span key={quiz.id}>{quiz.title}</span>)
+                                                            <Quiz edit={handleEdit} active={handleActive} deleteQuiz={handleDelete} course={course} key={index} quiz={quiz}/>)
                                                     }
                                                     <span className={'object__create'}
                                                           onClick={() => handleShow(level, listQuiz.filter(quiz => quiz.levelId === level).length + 1)}><i

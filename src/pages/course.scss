@@ -12,7 +12,22 @@
     color: #ffffff;
     display: inline-block;
     border:1px solid #16a085;
+    cursor: pointer;
+    user-select: none;
     background: #16a085;
+    &.disabled{
+      text-decoration: line-through;
+      background: darkgray;
+      border: 1px solid darkgray;
+      opacity: .7;
+      &:hover{
+        background: darkgray;
+        opacity: 1;
+      }
+    }
+    &:hover{
+      background: #27ae60;
+    }
     &.object__create{
       border: 1px solid;
       color: #16a085;
