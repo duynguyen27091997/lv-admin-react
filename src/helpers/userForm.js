@@ -2,7 +2,9 @@ import {useEffect, useState} from 'react';
 
 const useForm = (stateSchema, callback, validate) => {
     const [values, setValues] = useState(stateSchema);
-    const [errors, setErrors] = useState(stateSchema);
+    let tempOb = {}
+    Object.keys(stateSchema).forEach(k => tempOb[k] = "");
+    const [errors, setErrors] = useState(tempOb);
     const [isSubmit, setIsSubmit] = useState(false);
     const handleChange = e => {
         const {name, value} = e.target;
@@ -19,7 +21,9 @@ const useForm = (stateSchema, callback, validate) => {
     };
     const resetForm = (e) => {
         setValues(stateSchema);
-        setErrors(stateSchema);
+        let tempOb = {}
+        Object.keys(stateSchema).forEach(k => tempOb[k] = "");
+        setErrors(tempOb);
     };
     useEffect(() => {
         if (Object.keys(errors).length === 0 && isSubmit)

@@ -1,4 +1,4 @@
-import React, {forwardRef, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {Button, Form, Modal, Row} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Editor from "../editor/Editor";
@@ -8,7 +8,7 @@ import qs from 'querystring';
 import {useSelector} from "react-redux";
 import swal from "sweetalert";
 
-const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
+const ModalUpdateQuiz = forwardRef(({course,quiz,edit}, ref) => {
     const user = useSelector(state=>state.main.user);
     const [show, setShow] = useState(false);
     const [code, setCode] = useState(``);
@@ -17,19 +17,15 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
     const handleShow = () => setShow(true);
 
     const stateSchema = {
-        kindChallengeId: 0,
-        title: '',
-        questionSen: '',
-        tutorial: '',
-        result: ''
+        title: quiz.title,
+        questionSen: quiz.question,
+        tutorial: quiz.tutorial,
+        result: quiz.result
     };
 
     const validate = () => {
         let errors = {};
         //validate email
-        if (!values.kindChallengeId)
-            errors.kindChallengeId = 'Bắt buộc chọn loại câu hỏi !';
-
         if (!values.title)
             errors.title = 'Tiêu đề không được để trống !';
 
@@ -45,26 +41,26 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
     const submit = () => {
 
         let payload = {
-            kindChallengeId: values.kindChallengeId,
+            levelId: quiz.levelId,
+            kindChallengeId: 1,
             title: values.title,
-            assessmentId: test.id,
-            keyOnlyAssessment:1,
-            levelId:1,
+            sequenceNumber: quiz.sequenceNumber,
             questionSen: values.questionSen,
             tutorial: values.tutorial,
             result: values.result,
             courseId: course.id,
             languageId: course['LanguageChallenges'][0]['id'],
             authorId: user.id,
-            code: `${code}`
+            code: `${code}`,
+            active:1
         }
-        AxiosUsBe.post('/api/create-assessment', qs.stringify(payload))
+        AxiosUsBe.put(`/api/quiz/${quiz.id}`, qs.stringify(payload))
             .then(({data:res}) => {
                 handleClose();
-                add(res.data)
+                edit({...res.data,Courses:quiz['Courses']},1)
                 resetForm();
                 swal({
-                    title: 'Tạo bài tập thành công !',
+                    title: 'Chỉnh sửa thành công  !',
                     icon: 'success',
                     button: false,
                     timer: 1500
@@ -96,7 +92,7 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
         <Modal show={show} onHide={handleClose} dialogClassName="modal-90w">
             <Modal.Header closeButton>
                 <Modal.Title>
-                    <h1 className={'title'}>Tạo Câu hỏi</h1>
+                    <h1 className={'title'}>Chỉnh sửa</h1>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -117,19 +113,12 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
                             </Form.Row>
                             <Form.Row>
                                 <Col>
-                                    <Form.Label>Loại câu hỏi</Form.Label>
-                                    <Form.Control name={'kindChallengeId'} as="select"
-                                                  value={values.kindChallengeId}
-                                                  onChange={handleChange}>
-                                        <option value={0} disabled={true}>Chọn loại câu hỏi...</option>
-                                        <option value={1}>Chọn đáp án đúng</option>
-                                        <option value={2}>Viết code đúng</option>
-                                    </Form.Control>
-                                    {
-                                        errors['kindChallengeId'] ? <Form.Text className="error">
-                                            {errors['kindChallengeId']}
-                                        </Form.Text> : null
-                                    }
+                                    <Form.Label>Bài</Form.Label>
+                                    <Form.Control value={quiz.levelId} disabled={true}/>
+                                </Col>
+                                <Col>
+                                    <Form.Label>Thứ tự</Form.Label>
+                                    <Form.Control value={quiz.sequenceNumber} disabled={true}/>
                                 </Col>
                             </Form.Row>
                             <Form.Row className={'mt-2'}>
@@ -162,7 +151,7 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
                         </Form>
                     </Col>
                     <Col sm={6}>
-                        <Editor type={course['LanguageChallenges'][0]['title']} change={(code) =>setCode(`${code}`)}/>
+                        <Editor code={quiz.code} type={course['LanguageChallenges'][0]['title']} change={(code) =>setCode(`${code}`)}/>
                         <Form.Row className={'mt-2'}>
                             <Col>
                                 <Form.Label>Kết quả</Form.Label>
@@ -187,4 +176,4 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
     );
 });
 
-export default ModalCreateAssessment;
+export default ModalUpdateQuiz;

@@ -5,8 +5,13 @@ import AsideListItem from "../components/aside/AsideListItem";
 
 const menu = [
     {
-        text: 'Quản lí khoá học',
+        text: 'Trang chủ',
         icon:'las la-campground',
+        url:'/',
+    },
+    {
+        text: 'Quản lí khoá học',
+        icon:'las la-book',
         url:'',
         subMenu:[
             {
