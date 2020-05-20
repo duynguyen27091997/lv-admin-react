@@ -168,7 +168,7 @@ const ModalUpdateQuiz = forwardRef(({course,quiz,edit}, ref) => {
                 </Row>
                 <Row className={'mt-4'}>
                     <Col sm={{span: 4}}>
-                        <Button onClick={handleSubmit} variant={'success'} block={true}>Tạo</Button>
+                        <Button onClick={handleSubmit} variant={'success'} block={true}>Chỉnh sửa</Button>
                     </Col>
                 </Row>
             </Modal.Body>

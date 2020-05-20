@@ -11,6 +11,7 @@ import FormAssessment from "../components/form/FormAssessment";
 import Quiz from "../components/Quiz";
 import swal from "sweetalert";
 import qs from "querystring";
+import Exercise from "../components/Exercise";
 
 const Course = (props) => {
     const user = useSelector(state => state.main.user);
@@ -46,7 +47,7 @@ const Course = (props) => {
     }
     const handleDelete = (e,quiz,type=1)=>{
         swal({
-            title: "Bạn có chắc muốn xoá khoá học",
+            title: "Bạn có chắc muốn xoá bài học",
             icon: "warning",
             buttons: true,
             dangerMode: true,
@@ -56,7 +57,7 @@ const Course = (props) => {
                     .then(({data: res}) => {
                         if (res.success) {
                             swal({
-                                title: "Xoá câu hỏi thành công",
+                                title: "Xoá bài học thành công",
                                 icon: "success",
                                 buttons: false,
                                 timer: 1500
@@ -198,8 +199,8 @@ const Course = (props) => {
                                                 <div key={level} className={"object mb-3"}>
                                                     <h6>Bài {level}</h6>
                                                     {
-                                                        (listExercise.filter(quiz => quiz.levelId === level)).map(quiz =>
-                                                            <span key={quiz.id}>{quiz.title}</span>)
+                                                        (listExercise.filter(quiz => quiz.levelId === level)).map((quiz,index) =>
+                                                            <Exercise edit={handleEdit} active={handleActive} deleteQuiz={handleDelete} course={course} key={index} quiz={quiz}/>)
                                                     }
                                                     <span className={'object__create'}
                                                           onClick={() => handleShowEx(level, listExercise.filter(quiz => quiz.levelId === level).length + 1)}><i
@@ -213,7 +214,7 @@ const Course = (props) => {
                                 </Tab>
                                 <Tab eventKey="test" title="Kiểm tra">
                                     <div className={'my-4'}>
-                                        <FormAssessment course={course} />
+                                        <FormAssessment course={course} quizzes={[...listQuiz,...listExercise]} />
                                     </div>
                                 </Tab>
                             </Tabs>

@@ -72,10 +72,8 @@ const Login = () => {
             <div className="login__form">
                 <Form className={'px-4 py-5'}>
                     <Form.Group>
-                        <h1 style={{color: '#5d78ff'}} className={'text-center text-uppercase mb-0'}>Đăng nhập</h1>
-                        <h4 className={'text-center mb-5'}>
-                            Chào mừng đến với codetree
-                        </h4>
+                        <h1 style={{color: '#5d78ff'}} className={'text-center text-uppercase mb-5'}>Small Code CMS</h1>
+
                         {resErr && <div className="alert alert-danger" role="alert">
                             {resErr}
                         </div>}
