@@ -8,27 +8,21 @@ import qs from 'querystring';
 import {useSelector} from "react-redux";
 import swal from "sweetalert";
 
-const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, ref) => {
-    const user = useSelector(state => state.main.user);
+const ModalUpdateExercise = forwardRef(({course,quiz,edit}, ref) => {
+    const user = useSelector(state=>state.main.user);
     const [show, setShow] = useState(false);
     const [code, setCode] = useState(``);
     const [mainCode, setMainCode] = useState(``);
-    const [seNumber, setSeNumber] = useState(number);
-
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
     const stateSchema = {
-        title: '',
-        questionSen: '',
-        tutorial: '',
-        result: ''
+        title: quiz.title,
+        questionSen: quiz.question,
+        tutorial: quiz.tutorial,
+        result: quiz.result
     };
-
-    useEffect(_ => {
-        setSeNumber(number);
-    }, [number])
 
     const validate = () => {
         let errors = {};
@@ -48,10 +42,10 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
     const submit = () => {
 
         let payload = {
-            levelId: level,
+            levelId: quiz.levelId,
             kindChallengeId: 2,
             title: values.title,
-            sequenceNumber: seNumber,
+            sequenceNumber: quiz.sequenceNumber,
             questionSen: values.questionSen,
             tutorial: values.tutorial,
             result: values.result,
@@ -59,15 +53,16 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
             languageId: course['LanguageChallenges'][0]['id'],
             authorId: user.id,
             code: `${code}`,
-            mainCode: `${mainCode}`
+            mainCode: `${mainCode}`,
+            active:1
         }
-        AxiosUsBe.post('/api/quiz', qs.stringify(payload))
-            .then(({data: res}) => {
+        AxiosUsBe.put(`/api/quiz/${quiz.id}`, qs.stringify(payload))
+            .then(({data:res}) => {
                 handleClose();
-                add(res.data.data)
+                edit({...res.data,Courses:quiz['Courses']},2)
                 resetForm();
                 swal({
-                    title: 'Tạo bài tập thành công !',
+                    title: 'Chỉnh sửa thành công  !',
                     icon: 'success',
                     button: false,
                     timer: 1500
@@ -86,7 +81,7 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
 
     }
 
-    const {handleChange, handleSubmit, values, errors, resetForm} = useForm(stateSchema, submit, validate);
+    const {handleChange, handleSubmit, values, errors,resetForm} = useForm(stateSchema, submit, validate);
 
     useImperativeHandle(ref, () => {
         return {
@@ -99,7 +94,7 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
         <Modal show={show} onHide={handleClose} dialogClassName="modal-90w">
             <Modal.Header closeButton>
                 <Modal.Title>
-                    <h1 className={'title'}>Tạo Câu hỏi</h1>
+                    <h1 className={'title'}>Chỉnh sửa</h1>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -121,12 +116,11 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
                             <Form.Row>
                                 <Col>
                                     <Form.Label>Bài</Form.Label>
-                                    <Form.Control value={level} disabled={true}/>
+                                    <Form.Control value={quiz.levelId} disabled={true}/>
                                 </Col>
                                 <Col>
                                     <Form.Label>Thứ tự</Form.Label>
-                                    <Form.Control type={'number'} min={0} max={20} name={'sequenceNumber'}
-                                                  value={seNumber} onChange={e => setSeNumber(e.target.value)}/>
+                                    <Form.Control value={quiz.sequenceNumber} disabled={true}/>
                                 </Col>
                             </Form.Row>
                             <Form.Row className={'mt-2'}>
@@ -173,17 +167,16 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
                     <Col sm={6} style={{height: '70vh',overflowY: 'auto'}}>
                         <div className={'sticky-top'}>
                             <Form.Label>Code chính</Form.Label>
-                            <Editor type={course['LanguageChallenges'][0]['title']}
-                                    change={(code) => setCode(`${code}`)}/>
+                            <Editor code={quiz.code} type={course['LanguageChallenges'][0]['title']} change={(code) =>setCode(`${code}`)}/>
                             <Form.Label className={'mt-4'}>Code xử lí</Form.Label>
-                            <Editor type={course['LanguageChallenges'][0]['title']}
+                            <Editor code={quiz.mainCode||''} type={course['LanguageChallenges'][0]['title']}
                                     change={(mainCode) => setMainCode(`${mainCode}`)}/>
                         </div>
                     </Col>
                 </Row>
                 <Row className={'mt-4'}>
                     <Col sm={{span: 4}}>
-                        <Button onClick={handleSubmit} variant={'success'} block={true}>Tạo</Button>
+                        <Button onClick={handleSubmit} variant={'success'} block={true}>Chỉnh sửa</Button>
                     </Col>
                 </Row>
             </Modal.Body>
@@ -191,4 +184,4 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
     );
 });
 
-export default ModalCreateExercise;
+export default ModalUpdateExercise;

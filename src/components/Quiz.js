@@ -1,7 +1,6 @@
 import React, {useRef, useState} from 'react';
 import ModalUpdateQuiz from "./modal/ModalUpdateQuiz";
 import {Button, Form, Modal} from "react-bootstrap";
-import {Link} from "react-router-dom";
 
 const Quiz = ({course,quiz,active,deleteQuiz,edit}) => {
     const refModalQz = useRef(null);

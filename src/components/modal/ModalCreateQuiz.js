@@ -8,8 +8,8 @@ import qs from 'querystring';
 import {useSelector} from "react-redux";
 import swal from "sweetalert";
 
-const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => {
-    const user = useSelector(state=>state.main.user);
+const ModalCreateQuiz = forwardRef(({course, level = 1, number = 1, add}, ref) => {
+    const user = useSelector(state => state.main.user);
     const [show, setShow] = useState(false);
     const [seNumber, setSeNumber] = useState(number);
     const [code, setCode] = useState(``);
@@ -24,9 +24,9 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
         result: ''
     };
 
-    useEffect(_=>{
+    useEffect(_ => {
         setSeNumber(number);
-    },[number])
+    }, [number])
 
     const validate = () => {
         let errors = {};
@@ -59,7 +59,7 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
             code: `${code}`
         }
         AxiosUsBe.post('/api/quiz', qs.stringify(payload))
-            .then(({data:res}) => {
+            .then(({data: res}) => {
                 handleClose();
                 add(res.data.data)
                 resetForm();
@@ -83,7 +83,7 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
 
     }
 
-    const {handleChange, handleSubmit, values, errors,resetForm} = useForm(stateSchema, submit, validate);
+    const {handleChange, handleSubmit, values, errors, resetForm} = useForm(stateSchema, submit, validate);
 
     useImperativeHandle(ref, () => {
         return {
@@ -96,7 +96,7 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
         <Modal show={show} onHide={handleClose} dialogClassName="modal-90w">
             <Modal.Header closeButton>
                 <Modal.Title>
-                    <h1 className={'title'}>Tạo Câu hỏi</h1>
+                    <h1 className={'title'}>Tạo Bài Học</h1>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -122,7 +122,8 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
                                 </Col>
                                 <Col>
                                     <Form.Label>Thứ tự</Form.Label>
-                                    <Form.Control type={'number'} min={0} max={20} name={'sequenceNumber'} value={seNumber} onChange={e => setSeNumber(e.target.value)}/>
+                                    <Form.Control type={'number'} min={0} max={20} name={'sequenceNumber'}
+                                                  value={seNumber} onChange={e => setSeNumber(e.target.value)}/>
                                 </Col>
                             </Form.Row>
                             <Form.Row className={'mt-2'}>
@@ -154,20 +155,24 @@ const ModalCreateQuiz = forwardRef(({course, level = 1,number = 1,add}, ref) => 
                             </Form.Row>
                         </Form>
                     </Col>
-                    <Col sm={6}>
-                        <Editor type={course['LanguageChallenges'][0]['title']} change={(code) =>setCode(`${code}`)}/>
-                        <Form.Row className={'mt-2'}>
-                            <Col>
-                                <Form.Label>Kết quả</Form.Label>
-                                <Form.Control name={'result'} value={values.result} placeholder="Nhập kết quả ..."
-                                              onChange={handleChange}/>
-                                {
-                                    errors['result'] ? <Form.Text className="error">
-                                        {errors['result']}
-                                    </Form.Text> : null
-                                }
-                            </Col>
-                        </Form.Row>
+                    <Col sm={6} style={{height: '70vh',overflowY: 'auto'}}>
+                        <div className={'sticky-top'}>
+                            <Form.Label>Code chính</Form.Label>
+                            <Editor type={course['LanguageChallenges'][0]['title']}
+                                    change={(code) => setCode(`${code}`)}/>
+                            <Form.Row className={'mt-2'}>
+                                <Col>
+                                    <Form.Label>Kết quả</Form.Label>
+                                    <Form.Control name={'result'} value={values.result} placeholder="Nhập kết quả ..."
+                                                  onChange={handleChange}/>
+                                    {
+                                        errors['result'] ? <Form.Text className="error">
+                                            {errors['result']}
+                                        </Form.Text> : null
+                                    }
+                                </Col>
+                            </Form.Row>
+                        </div>
                     </Col>
                 </Row>
                 <Row className={'mt-4'}>

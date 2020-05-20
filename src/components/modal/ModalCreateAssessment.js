@@ -8,10 +8,11 @@ import qs from 'querystring';
 import {useSelector} from "react-redux";
 import swal from "sweetalert";
 
-const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
-    const user = useSelector(state=>state.main.user);
+const ModalCreateAssessment = forwardRef(({course, test, add}, ref) => {
+    const user = useSelector(state => state.main.user);
     const [show, setShow] = useState(false);
     const [code, setCode] = useState(``);
+    const [mainCode, setMainCode] = useState(``);
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -48,18 +49,22 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
             kindChallengeId: values.kindChallengeId,
             title: values.title,
             assessmentId: test.id,
-            keyOnlyAssessment:1,
-            levelId:1,
+            keyOnlyAssessment: 1,
+            levelId: 1,
             questionSen: values.questionSen,
             tutorial: values.tutorial,
             result: values.result,
             courseId: course.id,
             languageId: course['LanguageChallenges'][0]['id'],
             authorId: user.id,
-            code: `${code}`
+            code: `${code}`,
+            mainCode: `${mainCode}`,
+        }
+        if (values.kindChallengeId !== 2) {
+            payload.mainCode = '';
         }
         AxiosUsBe.post('/api/create-assessment', qs.stringify(payload))
-            .then(({data:res}) => {
+            .then(({data: res}) => {
                 handleClose();
                 add(res.data)
                 resetForm();
@@ -83,7 +88,7 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
 
     }
 
-    const {handleChange, handleSubmit, values, errors,resetForm} = useForm(stateSchema, submit, validate);
+    const {handleChange, handleSubmit, values, errors, resetForm} = useForm(stateSchema, submit, validate);
 
     useImperativeHandle(ref, () => {
         return {
@@ -96,7 +101,7 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
         <Modal show={show} onHide={handleClose} dialogClassName="modal-90w">
             <Modal.Header closeButton>
                 <Modal.Title>
-                    <h1 className={'title'}>Tạo Câu hỏi</h1>
+                    <h1 className={'title'}>Tạo câu hỏi trong bài kiểm tra</h1>
                 </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -159,22 +164,45 @@ const ModalCreateAssessment = forwardRef(({course,test,add}, ref) => {
                                     }
                                 </Col>
                             </Form.Row>
+                            {parseInt(values.kindChallengeId) === 2 ? <Form.Row className={'mt-2'}>
+                                <Col>
+                                    <Form.Label>Kết quả</Form.Label>
+                                    <Form.Control name={'result'} value={values.result} placeholder="Nhập kết quả ..."
+                                                  onChange={handleChange}/>
+                                    {
+                                        errors['result'] ? <Form.Text className="error">
+                                            {errors['result']}
+                                        </Form.Text> : null
+                                    }
+                                </Col>
+                            </Form.Row> : null}
                         </Form>
                     </Col>
-                    <Col sm={6}>
-                        <Editor type={course['LanguageChallenges'][0]['title']} change={(code) =>setCode(`${code}`)}/>
-                        <Form.Row className={'mt-2'}>
-                            <Col>
-                                <Form.Label>Kết quả</Form.Label>
-                                <Form.Control name={'result'} value={values.result} placeholder="Nhập kết quả ..."
-                                              onChange={handleChange}/>
-                                {
-                                    errors['result'] ? <Form.Text className="error">
-                                        {errors['result']}
-                                    </Form.Text> : null
-                                }
-                            </Col>
-                        </Form.Row>
+                    <Col sm={6} style={{height: '70vh', overflowY: 'auto'}}>
+                        <div className={'sticky-top'}>
+                            <Form.Label>Code chính</Form.Label>
+                            <Editor type={course['LanguageChallenges'][0]['title']}
+                                    change={(code) => setCode(`${code}`)}/>
+                            {
+                                parseInt(values.kindChallengeId) === 2 ?
+                                    <div><Form.Label className={'mt-4'}>Code xử lí</Form.Label>
+                                        <Editor type={course['LanguageChallenges'][0]['title']}
+                                                change={(mainCode) => setMainCode(`${mainCode}`)}/></div>
+                                    : <Form.Row className={'mt-2'}>
+                                        <Col>
+                                            <Form.Label>Kết quả</Form.Label>
+                                            <Form.Control name={'result'} value={values.result}
+                                                          placeholder="Nhập kết quả ..."
+                                                          onChange={handleChange}/>
+                                            {
+                                                errors['result'] ? <Form.Text className="error">
+                                                    {errors['result']}
+                                                </Form.Text> : null
+                                            }
+                                        </Col>
+                                    </Form.Row>
+                            }
+                        </div>
                     </Col>
                 </Row>
                 <Row className={'mt-4'}>
