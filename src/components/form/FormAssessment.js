@@ -7,7 +7,6 @@ import {AxiosUsBe} from "../../utils/axios";
 import swal from "sweetalert";
 import {toDateString} from "../../helpers/helpers";
 import ModalCreateAssessment from "../modal/ModalCreateAssessment";
-import {Link} from "react-router-dom";
 
 const FormAssessment = ({course, quizzes}) => {
     const user = useSelector(state => state.main.user);
@@ -30,6 +29,36 @@ const FormAssessment = ({course, quizzes}) => {
             errors.name = 'Tên đề thi không được để trống !';
 
         return errors;
+    }
+
+    function deleteQuiz(quiz) {
+        swal({
+            title: "Bạn có chắc muốn xoá câu hỏi khỏi bài kiểm tra ?",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then(r => {
+            AxiosUsBe.delete(`/api/assessment-quiz/${quiz.id}`)
+                .then(({data:res})=>{
+                    if (res.success) {
+                        swal({
+                            title: "Xoá câu  thành công",
+                            icon: "success",
+                            buttons: false,
+                            timer: 1500
+                        }).then()
+                        setListQuiz([...listQuiz.filter(item => item.id !== quiz.id)]);
+                    }
+                })
+                .catch(err=>{
+                    swal({
+                        title: "Xoá câu hỏi không thành công",
+                        icon: "error",
+                        buttons: false,
+                        timer: 1500
+                    }).then()
+                })
+        })
     }
 
     useEffect(_ => {
@@ -112,7 +141,7 @@ const FormAssessment = ({course, quizzes}) => {
         refModalTest.current.show()
     };
 
-    const handleDelete = (e,assessment)=>{
+    const handleDelete = (e, assessment) => {
         swal({
             title: "Bạn có chắc muốn xoá khoá học",
             icon: "warning",
@@ -130,7 +159,7 @@ const FormAssessment = ({course, quizzes}) => {
                                 timer: 1500
                             }).then()
                             setListTest([...listTest.filter(item => item.id !== assessment.id)]);
-                        }else{
+                        } else {
                             swal({
                                 title: "Có lỗi xảy ra !",
                                 icon: "error",
@@ -142,7 +171,7 @@ const FormAssessment = ({course, quizzes}) => {
             }
         })
     }
-    const handleActive = (e,assessment)=>{
+    const handleActive = (e, assessment) => {
         e.preventDefault();
         let isTrueSet = e.target.value === 'true';
         let payload = {
@@ -170,7 +199,7 @@ const FormAssessment = ({course, quizzes}) => {
                             let newListUser = [...listTest];
                             newListUser[currentIndex].active = !isTrueSet;
                             setListTest(newListUser);
-                        }else{
+                        } else {
                             swal({
                                 title: "Có lỗi xảy ra !",
                                 icon: "error",
@@ -199,7 +228,8 @@ const FormAssessment = ({course, quizzes}) => {
                                 </thead>
                                 <tbody>
                                 {
-                                    listTest.map(test => <tr className={!test.active ? 'disabled' : undefined} key={test.id}>
+                                    listTest.map(test => <tr className={!test.active ? 'disabled' : undefined}
+                                                             key={test.id}>
                                         <td>{test.id}</td>
                                         <td>{test.name}</td>
                                         <td>{test.description}</td>
@@ -215,7 +245,8 @@ const FormAssessment = ({course, quizzes}) => {
                                                             onClick={() => setTest(test)}><i
                                                         className="las la-edit mr-0"/></Button>
                                                     :
-                                                    <Button className={'mr-3'} variant={'info'} size={"sm"} style={{opacity:.3}}><i
+                                                    <Button className={'mr-3'} variant={'info'} size={"sm"}
+                                                            style={{opacity: .3}}><i
                                                         className="las la-edit mr-0"/></Button>
                                                 }
                                                 <Button
@@ -267,7 +298,10 @@ const FormAssessment = ({course, quizzes}) => {
                             <Col>
                                 <div className={"object my-3"}>
                                     {
-                                        listQuiz ? listQuiz.map(quiz => <span key={quiz.id}>{quiz.title}</span>) :
+                                        listQuiz ? listQuiz.map(quiz => <div key={quiz.id}
+                                                className={"d-inline-block assessment-quiz"}>
+                                                <span>{quiz.title}</span>
+                                                <i className="las la-times" onClick={() => deleteQuiz(quiz)}/></div>) :
                                             <p className={'text-center'}>Chưa có câu hỏi nào được tạo .</p>
                                     }
                                 </div>

@@ -481,3 +481,20 @@ tr.disabled{
     margin-bottom: 0;
   }
 }
+.assessment-quiz{
+  border:1px solid gray;
+  display: inline-block;
+  padding: 0;
+  margin: 5px;
+  span{
+    margin: 0!important;
+  }
+  i{
+    cursor: pointer;
+    line-height: 33px;
+    padding: 0 8px;
+    color:red;
+    display: inline-block;
+    vertical-align: middle;
+  }
+}
