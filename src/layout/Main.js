@@ -9,6 +9,7 @@ import ManageContents from "../pages/create/ManageContents";
 import ListUsers from "../pages/ListUsers";
 import CreateUser from "../pages/create/CreateUser";
 import Course from "../pages/Course";
+import ListMembers from "../pages/ListMember";
 
 const Main = () => {
     return (
@@ -18,6 +19,7 @@ const Main = () => {
                 <Route exact path={'/manage-contents'} component={ManageContents}/>
                 <Route exact path={'/manage-contents/:courseId'} component={Course}/>
                 <Route path={'/list-courses'} component={ListCourses}/>
+                <Route path={'/list-members'} component={ListMembers}/>
                 <Route path={'/list-users'} component={ListUsers}/>
                 <Route path={'/create-user'} component={CreateUser}/>
                 <Route path={'/setting'} component={Setting}/>
