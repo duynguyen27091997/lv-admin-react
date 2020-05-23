@@ -35,6 +35,11 @@ const menu = [
                 text:'Danh sách khoá học',
                 icon:'las la-list',
                 url:'/list-courses'
+            },
+            {
+                text:'Danh sách học viên',
+                icon:'las la-user-circle',
+                url:'/list-members'
             }
         ]
     },

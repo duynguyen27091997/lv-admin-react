@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {AxiosUsBe} from "../utils/axios";
+import {AxiosAdBe} from "../utils/axios";
 import {Table} from "react-bootstrap";
 import {toDateString} from "../helpers/helpers";
 
 
-const ListCourses = () => {
+const ListMembers = () => {
     const [list, setList] = useState([])
     useEffect(_ => {
-        AxiosUsBe.get('api/course')
+        AxiosAdBe.get('api/coder')
             .then(({data: res}) => {
                 if (res.success) {
                     setList(res.data);
@@ -20,25 +20,25 @@ const ListCourses = () => {
     return (
         <div className={'content edit-content'}>
             <div className={'box'}>
-                <h1 className={'title'}> Nội dung <i className="las la-angle-right"/>Danh sách khoá học</h1>
+                <h1 className={'title'}>Nội dung <i className="las la-angle-right"/> Danh sách học viên </h1>
                 <Table>
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tên khoá học</th>
-                        <th>Ngôn ngữ lập trình</th>
+                        <th>Email</th>
+                        <th>Tên đăng nhập</th>
                         <th>Ngày tạo</th>
-                        <th>Người tạo</th>
+                        <th>Dăng nhập lần cuối</th>
                     </tr>
                     </thead>
                     <tbody>
                     {
-                        list.map(course => <tr key={course.id}>
-                            <td>{course.id}</td>
-                            <td>{course.name}</td>
-                            <td>{course['LanguageChallenges'][0]['title']}</td>
-                            <td>{toDateString(course.createdAt)}</td>
-                            <td>{course.authorId}</td>
+                        list.map(member => <tr key={member.id}>
+                            <td>{member.id}</td>
+                            <td>{member.email}</td>
+                            <td>{member.username}</td>
+                            <td>{toDateString(member.createdAt)}</td>
+                            <td>{toDateString(member.lastLogin)}</td>
                         </tr>)
                     }
                     </tbody>
@@ -48,4 +48,4 @@ const ListCourses = () => {
     );
 };
 
-export default ListCourses;
+export default ListMembers;
