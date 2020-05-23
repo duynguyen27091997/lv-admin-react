@@ -5,8 +5,9 @@ import useForm from "../../helpers/userForm";
 import {useSelector} from "react-redux";
 import {AxiosUsBe} from "../../utils/axios";
 import swal from "sweetalert";
-import {toDateString} from "../../helpers/helpers";
+import {toDateString, toSeconds} from "../../helpers/helpers";
 import ModalCreateAssessment from "../modal/ModalCreateAssessment";
+import InputMask from 'react-input-mask';
 
 const FormAssessment = ({course, quizzes}) => {
     const user = useSelector(state => state.main.user);
@@ -19,7 +20,8 @@ const FormAssessment = ({course, quizzes}) => {
 
     const stateSchema = {
         name: '',
-        description: ''
+        description: '',
+        duration: ''
     };
 
     function validate(values) {
@@ -27,7 +29,9 @@ const FormAssessment = ({course, quizzes}) => {
         //validate name
         if (!values.name)
             errors.name = 'Tên đề thi không được để trống !';
-
+        if (!toSeconds(values.duration)){
+            errors.duration = 'Thời gian làm bài không được để trống !';
+        }
         return errors;
     }
 
@@ -38,26 +42,27 @@ const FormAssessment = ({course, quizzes}) => {
             buttons: true,
             dangerMode: true,
         }).then(r => {
-            AxiosUsBe.delete(`/api/assessment-quiz/${quiz.id}`)
-                .then(({data:res})=>{
-                    if (res.success) {
+            if (r)
+                AxiosUsBe.delete(`/api/assessment-quiz/${quiz.id}`)
+                    .then(({data: res}) => {
+                        if (res.success) {
+                            swal({
+                                title: "Xoá câu  thành công",
+                                icon: "success",
+                                buttons: false,
+                                timer: 1500
+                            }).then()
+                            setListQuiz([...listQuiz.filter(item => item.id !== quiz.id)]);
+                        }
+                    })
+                    .catch(err => {
                         swal({
-                            title: "Xoá câu  thành công",
-                            icon: "success",
+                            title: "Xoá câu hỏi không thành công",
+                            icon: "error",
                             buttons: false,
                             timer: 1500
                         }).then()
-                        setListQuiz([...listQuiz.filter(item => item.id !== quiz.id)]);
-                    }
-                })
-                .catch(err=>{
-                    swal({
-                        title: "Xoá câu hỏi không thành công",
-                        icon: "error",
-                        buttons: false,
-                        timer: 1500
-                    }).then()
-                })
+                    })
         })
     }
 
@@ -86,11 +91,13 @@ const FormAssessment = ({course, quizzes}) => {
             })
     }, [])
     const submit = () => {
+        let seconds = toSeconds(values.duration);
         let payload = {
             courseId: course.id,
             authorId: user.id,
             name: values.name,
             description: values.description,
+            duration: seconds,
             active: 1
         }
         AxiosUsBe.post('/api/assessment', qs.stringify(payload))
@@ -284,6 +291,16 @@ const FormAssessment = ({course, quizzes}) => {
                             </Form.Row>
                             <Form.Row>
                                 <Col>
+                                    <InputMask placeholder={'00:00:00'} name={'duration'} className={'form-control'}
+                                               mask="99:99:99" maskChar={null} value={values.duration}
+                                               onChange={handleChange}/>
+                                    {
+                                        errors['duration'] ? <Form.Text className="error">
+                                            {errors['duration']}
+                                        </Form.Text> : null
+                                    }
+                                </Col>
+                                <Col>
                                     <Button onClick={handleSubmit} variant="success" block={true}><i
                                         className="las la-plus"/>Tạo</Button>
                                 </Col>
@@ -299,7 +316,7 @@ const FormAssessment = ({course, quizzes}) => {
                                 <div className={"object my-3"}>
                                     {
                                         listQuiz ? listQuiz.map(quiz => <div key={quiz.id}
-                                                className={"d-inline-block assessment-quiz"}>
+                                                                             className={"d-inline-block assessment-quiz"}>
                                                 <span>{quiz.title}</span>
                                                 <i className="las la-times" onClick={() => deleteQuiz(quiz)}/></div>) :
                                             <p className={'text-center'}>Chưa có câu hỏi nào được tạo .</p>

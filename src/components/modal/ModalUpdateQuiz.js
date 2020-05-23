@@ -151,6 +151,7 @@ const ModalUpdateQuiz = forwardRef(({course,quiz,edit}, ref) => {
                         </Form>
                     </Col>
                     <Col sm={6}>
+                        <Form.Label>Code</Form.Label>
                         <Editor code={quiz.code} type={course['LanguageChallenges'][0]['title']} change={(code) =>setCode(`${code}`)}/>
                         <Form.Row className={'mt-2'}>
                             <Col>

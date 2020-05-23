@@ -180,12 +180,12 @@ const ModalCreateAssessment = forwardRef(({course, test, add}, ref) => {
                     </Col>
                     <Col sm={6} style={{height: '70vh', overflowY: 'auto'}}>
                         <div className={'sticky-top'}>
-                            <Form.Label>Code chính</Form.Label>
+                            <Form.Label>Code</Form.Label>
                             <Editor type={course['LanguageChallenges'][0]['title']}
                                     change={(code) => setCode(`${code}`)}/>
                             {
                                 parseInt(values.kindChallengeId) === 2 ?
-                                    <div><Form.Label className={'mt-4'}>Code xử lí</Form.Label>
+                                    <div><Form.Label className={'mt-4'}>MainCode</Form.Label>
                                         <Editor type={course['LanguageChallenges'][0]['title']}
                                                 change={(mainCode) => setMainCode(`${mainCode}`)}/></div>
                                     : <Form.Row className={'mt-2'}>
