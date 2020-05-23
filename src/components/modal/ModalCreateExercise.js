@@ -172,10 +172,10 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
                     </Col>
                     <Col sm={6} style={{height: '70vh',overflowY: 'auto'}}>
                         <div className={'sticky-top'}>
-                            <Form.Label>Code chính</Form.Label>
+                            <Form.Label>Code</Form.Label>
                             <Editor type={course['LanguageChallenges'][0]['title']}
                                     change={(code) => setCode(`${code}`)}/>
-                            <Form.Label className={'mt-4'}>Code xử lí</Form.Label>
+                            <Form.Label className={'mt-4'}>Main Code</Form.Label>
                             <Editor type={course['LanguageChallenges'][0]['title']}
                                     change={(mainCode) => setMainCode(`${mainCode}`)}/>
                         </div>

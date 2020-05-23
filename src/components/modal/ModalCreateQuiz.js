@@ -157,7 +157,7 @@ const ModalCreateQuiz = forwardRef(({course, level = 1, number = 1, add}, ref) =
                     </Col>
                     <Col sm={6} style={{height: '70vh',overflowY: 'auto'}}>
                         <div className={'sticky-top'}>
-                            <Form.Label>Code chính</Form.Label>
+                            <Form.Label>Code</Form.Label>
                             <Editor type={course['LanguageChallenges'][0]['title']}
                                     change={(code) => setCode(`${code}`)}/>
                             <Form.Row className={'mt-2'}>
