@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useImperativeHandle, useState} from 'react';
 import {Button, Form, Modal, Row} from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Editor from "../editor/Editor";
