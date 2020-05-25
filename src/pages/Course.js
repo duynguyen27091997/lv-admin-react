@@ -139,21 +139,34 @@ const Course = (props) => {
             })
         AxiosUsBe.get(`/api/quiz-by-course/${props.match.params.courseId}`)
             .then(({data: res}) => {
-                setListQuiz(res.data.filter(quiz => quiz.kindChallengeId === 1))
-                setListExercise(res.data.filter(quiz => quiz.kindChallengeId === 2))
+                let sortArr =res.data.sort((a,b)=>a.levelId-b.levelId);
+                setListQuiz(sortArr.filter(quiz => quiz.kindChallengeId === 1))
+                setListExercise(sortArr.filter(quiz => quiz.kindChallengeId === 2))
             })
             .catch(err => {
                 console.log(err)
             })
     }, [props.match.params.courseId, user.id])
     useEffect(_ => {
-        if (listQuiz) {
-            setListObject(new Set(listQuiz.map(item => item.levelId)))
+        if (listQuiz.length) {
+            console.log(listQuiz)
+            let maxId = listQuiz[listQuiz.length-1].levelId;
+            let newSet = new Set();
+            for (let i =1 ;i<=maxId;i++){
+                newSet.add(i);
+            }
+            setListObject(newSet);
         }
     }, [listQuiz])
     useEffect(_ => {
-        if (listExercise) {
-            setListObjectEx(new Set(listExercise.map(item => item.levelId)))
+        if (listExercise.length) {
+            console.log(listExercise)
+            let maxId = listExercise[listExercise.length-1].levelId;
+            let newSet = new Set();
+            for (let i =1 ;i<=maxId;i++){
+                newSet.add(i);
+            }
+            setListObjectEx(newSet);
         }
     }, [listExercise])
     return (
@@ -177,7 +190,7 @@ const Course = (props) => {
                                                 <div key={level} className={"object mb-3"}>
                                                     <h6>Bài {level}</h6>
                                                     {
-                                                        (listQuiz.filter(quiz => quiz.levelId === level)).map((quiz, index, list) =>
+                                                        (listQuiz.sort((a, b) => a.sequenceNumber-b.sequenceNumber).filter(quiz => quiz.levelId === level)).map((quiz, index, list) =>
                                                             <Quiz edit={handleEdit} active={handleActive} deleteQuiz={handleDelete} course={course} key={index} quiz={quiz}/>)
                                                     }
                                                     <span className={'object__create'}
@@ -199,7 +212,7 @@ const Course = (props) => {
                                                 <div key={level} className={"object mb-3"}>
                                                     <h6>Bài {level}</h6>
                                                     {
-                                                        (listExercise.filter(quiz => quiz.levelId === level)).map((quiz,index) =>
+                                                        (listExercise.sort((a, b) => a.sequenceNumber-b.sequenceNumber).filter(quiz => quiz.levelId === level)).map((quiz,index) =>
                                                             <Exercise edit={handleEdit} active={handleActive} deleteQuiz={handleDelete} course={course} key={index} quiz={quiz}/>)
                                                     }
                                                     <span className={'object__create'}

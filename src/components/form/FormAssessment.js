@@ -78,6 +78,7 @@ const FormAssessment = ({course, quizzes}) => {
                 .catch(err => {
                     console.log(err)
                 })
+        // eslint-disable-next-line
     }, [quizAdd]);
     useEffect(_ => {
         AxiosUsBe.get('/api/assessment')
