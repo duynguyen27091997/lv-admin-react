@@ -156,6 +156,8 @@ const Course = (props) => {
                 newSet.add(i);
             }
             setListObject(newSet);
+        }else{
+            setListObject(new Set());
         }
     }, [listQuiz])
     useEffect(_ => {
@@ -167,6 +169,8 @@ const Course = (props) => {
                 newSet.add(i);
             }
             setListObjectEx(newSet);
+        }else{
+            setListObjectEx(new Set());
         }
     }, [listExercise])
     return (
