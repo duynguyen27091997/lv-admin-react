@@ -18,8 +18,8 @@ axios.interceptors.response.use(
 );
 
 export const AxiosAdBe = axios.create({
-    baseURL: 'http://127.0.0.1:3030/admin/',
+    baseURL: 'http://api.smallcode.info/admin/',
 });
 export const AxiosUsBe = axios.create({
-    baseURL: 'http://127.0.0.1:3030/users/',
+    baseURL: 'http://api.smallcode.info/users/',
 });
