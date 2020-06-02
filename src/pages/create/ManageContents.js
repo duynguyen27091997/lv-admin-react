@@ -81,7 +81,7 @@ const ManageContents = () => {
     return (
         <div className={'content edit-content'}>
             <div className={'box'}>
-                <h1 className={'title'}>Quản lí khoá học <i className="las la-angle-right"/> Quản lí nội dung</h1>
+                <h1 className={'title'}>Quản lí khoá học <i className="las la-angle-right"/> Khoá học của tôi</h1>
                 <Table>
                     <thead>
                     <tr>
