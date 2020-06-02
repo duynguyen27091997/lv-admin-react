@@ -179,7 +179,7 @@ const Course = (props) => {
                 !loading ?
                     course ?
                         <div className={'box p-4'}>
-                            <h1 className={'title'}>Quản lí khoá học <i className="las la-angle-right"/> Khoá học <i
+                            <h1 className={'title'}>Quản lí khoá học <i className="las la-angle-right"/> Khoá học của tôi <i
                                 className="las la-angle-right"/>
                                 {course.name}
                             </h1>

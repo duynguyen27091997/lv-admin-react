@@ -20,7 +20,7 @@ const ListMembers = () => {
     return (
         <div className={'content edit-content'}>
             <div className={'box'}>
-                <h1 className={'title'}>Nội dung <i className="las la-angle-right"/> Danh sách học viên </h1>
+                <h1 className={'title'}>Danh sách <i className="las la-angle-right"/> Danh sách học viên </h1>
                 <Table>
                     <thead>
                     <tr>

@@ -77,7 +77,7 @@ const ListUsers = () => {
     return (
         <div className={'content'}>
             <div className={'box'}>
-                <h1 className={'title'}>Quản trị <i className="las la-angle-right"/>Danh sách người dùng</h1>
+                <h1 className={'title'}>Quản trị <i className="las la-angle-right"/>Quản trị người dùng</h1>
                 <Container fluid={true} className={'text-center'}>
                     <Row>
                         <Col>

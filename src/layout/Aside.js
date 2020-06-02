@@ -20,14 +20,14 @@ const menu = [
                 url:'/create-courses'
             },
             {
-                text:'Quản lý nội dung',
+                text:'Khoá học của tôi',
                 icon:'las la-archive',
                 url:'/manage-contents'
             }
         ]
     },
     {
-        text: 'Nội dung',
+        text: 'Danh sách',
         icon:'las la-tasks',
         url:'',
         subMenu:[
@@ -54,7 +54,7 @@ const menu = [
                 url:'/create-user'
             },
             {
-                text:'Danh sách người dùng',
+                text:'Quản trị người dùng',
                 icon:'las la-user-alt',
                 url:'/list-users'
             }

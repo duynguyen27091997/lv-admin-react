@@ -2,10 +2,13 @@ import React, {useEffect, useState} from 'react';
 import {AxiosUsBe} from "../utils/axios";
 import {Table} from "react-bootstrap";
 import {toDateString} from "../helpers/helpers";
+import {useSelector} from "react-redux";
+import {Link} from "react-router-dom";
 
 
 const ListCourses = () => {
     const [list, setList] = useState([])
+    const user = useSelector(state => state.main.user);
     useEffect(_ => {
         AxiosUsBe.get('api/course')
             .then(({data: res}) => {
@@ -20,7 +23,7 @@ const ListCourses = () => {
     return (
         <div className={'content edit-content'}>
             <div className={'box'}>
-                <h1 className={'title'}> Nội dung <i className="las la-angle-right"/>Danh sách khoá học</h1>
+                <h1 className={'title'}>Danh sách <i className="las la-angle-right"/>Danh sách khoá học</h1>
                 <Table>
                     <thead>
                     <tr>
@@ -38,7 +41,13 @@ const ListCourses = () => {
                             <td>{course.name}</td>
                             <td>{course['LanguageChallenges'][0]['title']}</td>
                             <td>{toDateString(course.createdAt)}</td>
-                            <td>{course.authorId}</td>
+                            {
+                                user.id === course.authorId ?
+                                    <td><Link to={`/manage-contents/${course.id}`} className={'text-info'}>Của tôi</Link></td>
+                                    :
+                                    <td>{}</td>
+                            }
+
                         </tr>)
                     }
                     </tbody>
