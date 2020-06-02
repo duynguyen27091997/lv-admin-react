@@ -272,6 +272,10 @@ const FormAssessment = ({course, quizzes}) => {
                             <h6 className={'py-4 text-center'}>Chưa có đề thi nào được tạo .</h6>
                         }
                         <Form>
+                            <div className="border"/>
+                            <Form.Row>
+                                <h5 className={'titlethi mt-4'}>Tạo đề </h5>
+                            </Form.Row>
                             <Form.Row>
                                 <Col>
                                     <Form.Control name={'name'} placeholder="Nhập tên đề thi ..."
