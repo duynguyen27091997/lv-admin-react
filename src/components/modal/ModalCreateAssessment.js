@@ -60,7 +60,7 @@ const ModalCreateAssessment = forwardRef(({course, test, add}, ref) => {
             code: `${code}`,
             mainCode: `${mainCode}`,
         }
-        if (values.kindChallengeId !== 2) {
+        if (parseInt(values.kindChallengeId) === 1) {
             payload.mainCode = '';
         }
         AxiosUsBe.post('/api/create-assessment', qs.stringify(payload))
