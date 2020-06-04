@@ -81,7 +81,7 @@ const FormAssessment = ({course, quizzes}) => {
         // eslint-disable-next-line
     }, [quizAdd]);
     useEffect(_ => {
-        AxiosUsBe.get('/api/assessment')
+        AxiosUsBe.get(`/api/assessment?courseId=${course.id}`)
             .then(({data: res}) => {
                 if (res.success) {
                     setListTest(res.data)
