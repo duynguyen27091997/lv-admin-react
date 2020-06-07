@@ -45,7 +45,7 @@ const Course = (props) => {
     const addExercise = (quiz) => {
         setListExercise([...listExercise, quiz])
     }
-    const handleDelete = (e,quiz,type=1)=>{
+    const handleDelete = (e, quiz, type = 1) => {
         swal({
             title: "Bạn có chắc muốn xoá bài học",
             icon: "warning",
@@ -62,9 +62,9 @@ const Course = (props) => {
                                 buttons: false,
                                 timer: 1500
                             }).then()
-                            if (type===1) {
+                            if (type === 1) {
                                 setListQuiz([...listQuiz.filter(item => item.id !== quiz.id)]);
-                            }else{
+                            } else {
                                 setListExercise([...listExercise.filter(item => item.id !== quiz.id)]);
                             }
                         }
@@ -72,20 +72,20 @@ const Course = (props) => {
             }
         })
     }
-    const handleEdit = (payload,type=1)=>{
-        if (type===1) {
+    const handleEdit = (payload, type = 1) => {
+        if (type === 1) {
             let currentIndex = listQuiz.findIndex(item => item.id === payload.id);
             let newListUser = [...listQuiz];
-            newListUser.splice(currentIndex,1,payload);
+            newListUser.splice(currentIndex, 1, payload);
             setListQuiz(newListUser);
-        }else{
+        } else {
             let currentIndex = listExercise.findIndex(item => item.id === payload.id);
             let newListUser = [...listExercise];
-            newListUser.splice(currentIndex,1,payload);
+            newListUser.splice(currentIndex, 1, payload);
             setListExercise(newListUser);
         }
     }
-    const handleActive = (e,quiz,type)=>{
+    const handleActive = (e, quiz, type) => {
         e.preventDefault();
         let isTrueSet = e.target.value === 'true';
         let payload = {
@@ -109,12 +109,12 @@ const Course = (props) => {
                                 buttons: false,
                                 timer: 1500
                             }).then()
-                            if (type===1) {
+                            if (type === 1) {
                                 let currentIndex = listQuiz.findIndex(item => item.id === quiz.id);
                                 let newListUser = [...listQuiz];
                                 newListUser[currentIndex].active = !isTrueSet;
                                 setListQuiz(newListUser);
-                            }else{
+                            } else {
                                 let currentIndex = listExercise.findIndex(item => item.id === quiz.id);
                                 let newListUser = [...listExercise];
                                 newListUser[currentIndex].active = !isTrueSet;
@@ -139,7 +139,7 @@ const Course = (props) => {
             })
         AxiosUsBe.get(`/api/quiz-by-course/${props.match.params.courseId}`)
             .then(({data: res}) => {
-                let sortArr =res.data.sort((a,b)=>a.levelId-b.levelId);
+                let sortArr = res.data.sort((a, b) => a.levelId - b.levelId);
                 setListQuiz(sortArr.filter(quiz => quiz.kindChallengeId === 1))
                 setListExercise(sortArr.filter(quiz => quiz.kindChallengeId === 2))
             })
@@ -149,27 +149,25 @@ const Course = (props) => {
     }, [props.match.params.courseId, user.id])
     useEffect(_ => {
         if (listQuiz.length) {
-            console.log(listQuiz)
-            let maxId = listQuiz[listQuiz.length-1].levelId;
+            let maxId = Math.max.apply(Math, listQuiz.map(quiz => quiz.levelId))
             let newSet = new Set();
-            for (let i =1 ;i<=maxId;i++){
+            for (let i = 1; i <= maxId; i++) {
                 newSet.add(i);
             }
             setListObject(newSet);
-        }else{
+        } else {
             setListObject(new Set());
         }
     }, [listQuiz])
     useEffect(_ => {
         if (listExercise.length) {
-            console.log(listExercise)
-            let maxId = listExercise[listExercise.length-1].levelId;
+            let maxId = Math.max.apply(Math, listExercise.map(quiz => quiz.levelId))
             let newSet = new Set();
-            for (let i =1 ;i<=maxId;i++){
+            for (let i = 1; i <= maxId; i++) {
                 newSet.add(i);
             }
             setListObjectEx(newSet);
-        }else{
+        } else {
             setListObjectEx(new Set());
         }
     }, [listExercise])
@@ -179,8 +177,9 @@ const Course = (props) => {
                 !loading ?
                     course ?
                         <div className={'box p-4'}>
-                            <h1 className={'title'}>Quản lí khoá học <i className="las la-angle-right"/> Khoá học của tôi <i
-                                className="las la-angle-right"/>
+                            <h1 className={'title'}>Quản lí khoá học <i className="las la-angle-right"/> Khoá học của
+                                tôi <i
+                                    className="las la-angle-right"/>
                                 {course.name}
                             </h1>
                             <Tabs
@@ -194,12 +193,16 @@ const Course = (props) => {
                                                 <div key={level} className={"object mb-3"}>
                                                     <h6>Bài {level}</h6>
                                                     {
-                                                        (listQuiz.sort((a, b) => a.sequenceNumber-b.sequenceNumber).filter(quiz => quiz.levelId === level)).map((quiz, index, list) =>
-                                                            <Quiz edit={handleEdit} active={handleActive} deleteQuiz={handleDelete} course={course} key={index} quiz={quiz}/>)
+                                                        (listQuiz.sort((a, b) => a.sequenceNumber - b.sequenceNumber).filter(quiz => quiz.levelId === level)).map((quiz, index, list) =>
+                                                            <Quiz edit={handleEdit} active={handleActive}
+                                                                  deleteQuiz={handleDelete} course={course} key={index}
+                                                                  quiz={quiz} level={level} index={index}/>)
                                                     }
+                                                    <div className={'d-inline-block'}>
                                                     <span className={'object__create'}
                                                           onClick={() => handleShow(level, listQuiz.filter(quiz => quiz.levelId === level).length + 1)}><i
                                                         className="las la-plus"/></span>
+                                                    </div>
                                                 </div>)
                                         }
                                         <div className={'object__create w-100 text-center'}
@@ -216,12 +219,16 @@ const Course = (props) => {
                                                 <div key={level} className={"object mb-3"}>
                                                     <h6>Bài {level}</h6>
                                                     {
-                                                        (listExercise.sort((a, b) => a.sequenceNumber-b.sequenceNumber).filter(quiz => quiz.levelId === level)).map((quiz,index) =>
-                                                            <Exercise edit={handleEdit} active={handleActive} deleteQuiz={handleDelete} course={course} key={index} quiz={quiz}/>)
+                                                        (listExercise.sort((a, b) => a.sequenceNumber - b.sequenceNumber).filter(quiz => quiz.levelId === level)).map((quiz, index) =>
+                                                            <Exercise edit={handleEdit} active={handleActive}
+                                                                      deleteQuiz={handleDelete} course={course}
+                                                                      key={index} quiz={quiz} level={level} index={index}/>)
                                                     }
+                                                    <div className={'d-inline-block'}>
                                                     <span className={'object__create'}
                                                           onClick={() => handleShowEx(level, listExercise.filter(quiz => quiz.levelId === level).length + 1)}><i
                                                         className="las la-plus"/></span>
+                                                    </div>
                                                 </div>)
                                         }
                                         <div className={'object__create w-100 text-center'}
@@ -231,7 +238,7 @@ const Course = (props) => {
                                 </Tab>
                                 <Tab eventKey="test" title="Kiểm tra">
                                     <div className={'my-4'}>
-                                        <FormAssessment course={course} quizzes={[...listQuiz,...listExercise]} />
+                                        <FormAssessment course={course} quizzes={[...listQuiz.sort((a,b)=>a.levelId - b.levelId), ...listExercise]}/>
                                     </div>
                                 </Tab>
                             </Tabs>
