@@ -18,8 +18,8 @@ const ModalCreateQuiz = forwardRef(({course, level = 1, number = 1, add}, ref) =
     const handleShow = () => setShow(true);
 
     const stateSchema = {
-        title: '',
-        questionSen: '',
+        title: 'Điền kết quả thực thi đoạn code sau:',
+        questionSen: 'kết quả console.log',
         tutorial: '',
         result: ''
     };
@@ -37,8 +37,6 @@ const ModalCreateQuiz = forwardRef(({course, level = 1, number = 1, add}, ref) =
         if (!values.questionSen)
             errors.questionSen = 'Câu hỏi không được để trống !';
         //validate password
-        if (!values.result)
-            errors.result = 'Kết qủa không được để trống !';
 
         return errors;
     }

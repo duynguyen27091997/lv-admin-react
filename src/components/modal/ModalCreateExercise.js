@@ -38,9 +38,6 @@ const ModalCreateExercise = forwardRef(({course, level = 1, number = 1, add}, re
 
         if (!values.questionSen)
             errors.questionSen = 'Câu hỏi không được để trống !';
-        //validate password
-        if (!values.result)
-            errors.result = 'Kết qủa không được để trống !';
 
         return errors;
     }

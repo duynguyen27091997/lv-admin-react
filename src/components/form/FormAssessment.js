@@ -8,10 +8,12 @@ import swal from "sweetalert";
 import {toDateString, toSeconds} from "../../helpers/helpers";
 import ModalCreateAssessment from "../modal/ModalCreateAssessment";
 import InputMask from 'react-input-mask';
+import PageLoading from "../common/PageLoading";
 
 const FormAssessment = ({course, quizzes}) => {
     const user = useSelector(state => state.main.user);
     const [quizAdd, setQuizAdd] = useState(0);
+    const [loading, setLoading] = useState(false);
     const [test, setTest] = useState(null);
     const [listTest, setListTest] = useState([]);
     const [listQuiz, setListQuiz] = useState([]);
@@ -29,7 +31,7 @@ const FormAssessment = ({course, quizzes}) => {
         //validate name
         if (!values.name)
             errors.name = 'Tên đề thi không được để trống !';
-        if (!toSeconds(values.duration)){
+        if (!toSeconds(values.duration)) {
             errors.duration = 'Thời gian làm bài không được để trống !';
         }
         return errors;
@@ -43,31 +45,36 @@ const FormAssessment = ({course, quizzes}) => {
             dangerMode: true,
         }).then(r => {
             if (r)
-                AxiosUsBe.delete(`/api/assessment-quiz/${quiz.id}`)
-                    .then(({data: res}) => {
-                        if (res.success) {
-                            swal({
-                                title: "Xoá câu  thành công",
-                                icon: "success",
-                                buttons: false,
-                                timer: 1500
-                            }).then()
-                            setListQuiz([...listQuiz.filter(item => item.id !== quiz.id)]);
-                        }
-                    })
-                    .catch(err => {
+                setLoading(true)
+            AxiosUsBe.delete(`/api/assessment-quiz/${quiz.id}`)
+                .then(({data: res}) => {
+                    if (res.success) {
                         swal({
-                            title: "Xoá câu hỏi không thành công",
-                            icon: "error",
+                            title: "Xoá câu  thành công",
+                            icon: "success",
                             buttons: false,
                             timer: 1500
                         }).then()
-                    })
+                        setListQuiz([...listQuiz.filter(item => item.id !== quiz.id)]);
+                    }
+                })
+                .catch(err => {
+                    swal({
+                        title: "Xoá câu hỏi không thành công",
+                        icon: "error",
+                        buttons: false,
+                        timer: 1500
+                    }).then()
+                })
+                .finally(_ => {
+                    setLoading(false)
+                })
         })
     }
 
     useEffect(_ => {
-        if (test && quizAdd)
+        if (test && quizAdd) {
+            setLoading(true)
             AxiosUsBe.post('/api/add-assessment', qs.stringify({quizId: quizAdd, assessmentId: test.id}))
                 .then(({data: res}) => {
                     if (res.success) {
@@ -78,6 +85,10 @@ const FormAssessment = ({course, quizzes}) => {
                 .catch(err => {
                     console.log(err)
                 })
+                .finally(_ => {
+                    setLoading(false)
+                })
+        }
         // eslint-disable-next-line
     }, [quizAdd]);
     useEffect(_ => {
@@ -90,8 +101,9 @@ const FormAssessment = ({course, quizzes}) => {
             .catch(err => {
                 setListTest([])
             })
-    }, [])
+    }, [course])
     const submit = () => {
+        setLoading(true)
         let seconds = toSeconds(values.duration);
         let payload = {
             courseId: course.id,
@@ -119,9 +131,13 @@ const FormAssessment = ({course, quizzes}) => {
             .catch(err => {
                 console.log(err)
             })
+            .finally(_ => {
+                setLoading(false)
+            })
     }
     useEffect(_ => {
         if (test) {
+            setLoading(true)
             AxiosUsBe.get(`/api/quiz-by-assessment/${test.id}`)
                 .then(({data: res}) => {
                     if (res.success)
@@ -132,6 +148,9 @@ const FormAssessment = ({course, quizzes}) => {
                 .catch
                 (err => {
                     setListQuiz([])
+                })
+                .finally(_ => {
+                    setLoading(false)
                 })
         }
     }, [test])
@@ -221,6 +240,7 @@ const FormAssessment = ({course, quizzes}) => {
     }
     return (
         <div>
+            {loading && <PageLoading/>}
             {
                 !test ?
                     <div>
@@ -320,10 +340,18 @@ const FormAssessment = ({course, quizzes}) => {
                             <Col>
                                 <div className={"object my-3"}>
                                     {
-                                        listQuiz ? listQuiz.map(quiz => <div key={quiz.id}
-                                                                             className={"d-inline-block assessment-quiz"}>
-                                                <span>{quiz.title}</span>
-                                                <i className="las la-times" onClick={() => deleteQuiz(quiz)}/></div>) :
+                                        listQuiz ? listQuiz.map(quiz => {
+                                                if (parseInt(quiz.kindChallengeId) === 1)
+                                                    return <div key={quiz.id}
+                                                                className={"d-inline-block assessment-quiz"}>
+                                                        <span>Câu {quiz.levelId + '.' + quiz.sequenceNumber}</span>
+                                                        <i className="las la-times" onClick={() => deleteQuiz(quiz)}/></div>
+                                                else
+                                                    return <div key={quiz.id}
+                                                                className={"d-inline-block assessment-quiz"}>
+                                                        <span>{quiz.title}</span>
+                                                        <i className="las la-times" onClick={() => deleteQuiz(quiz)}/></div>
+                                            }) :
                                             <p className={'text-center'}>Chưa có câu hỏi nào được tạo .</p>
                                     }
                                 </div>
@@ -335,8 +363,14 @@ const FormAssessment = ({course, quizzes}) => {
                                 <Form.Control as="select" value={quizAdd} onChange={e => setQuizAdd(e.target.value)}>
                                     <option value={0} disabled={true}>Chọn câu hỏi ...</option>
                                     {
-                                        listQuizAdd.map(quiz => <option key={quiz.id}
-                                                                        value={quiz.id}>{quiz.title}</option>)
+                                        listQuizAdd.map(quiz => {
+                                            if (parseInt(quiz.kindChallengeId) === 1)
+                                                return <option key={quiz.id}
+                                                               value={quiz.id}>Câu {quiz.levelId + '.' + quiz.sequenceNumber}</option>
+                                            else
+                                                return <option key={quiz.id}
+                                                               value={quiz.id}>{quiz.title}</option>
+                                        })
                                     }
                                 </Form.Control>
                             </Col>

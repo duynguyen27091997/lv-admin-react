@@ -2,7 +2,7 @@ import React, {useRef, useState} from 'react';
 import {Button, Form, Modal} from "react-bootstrap";
 import ModalUpdateExercise from "./modal/ModalUpdateExercise";
 
-const Exercise = ({course,quiz,active,deleteQuiz,edit}) => {
+const Exercise = ({course,quiz,active,deleteQuiz,edit,level,index}) => {
     const refModalEx = useRef(null);
     const [show, setShow] = useState(false);
 
@@ -13,7 +13,7 @@ const Exercise = ({course,quiz,active,deleteQuiz,edit}) => {
         refModalEx.current.show()
     }
     return (<div className={'d-inline-block'}>
-            <span className={!quiz.active ?"disabled" : undefined} onClick={handleShow}>{quiz.title}</span>
+            <span className={(!quiz.active ?"disabled" : '')+" text-quiz"} onClick={handleShow}>{quiz.title}</span>
             <Modal show={show} onHide={handleClose} centered={true}>
                 <Modal.Header closeButton>
                     <Modal.Title>
