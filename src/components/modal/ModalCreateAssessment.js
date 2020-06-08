@@ -36,9 +36,7 @@ const ModalCreateAssessment = forwardRef(({course, test, add}, ref) => {
 
         if (!values.questionSen)
             errors.questionSen = 'Câu hỏi không được để trống !';
-        //validate password
-        if (!values.result)
-            errors.result = 'Kết qủa không được để trống !';
+
 
         return errors;
     }
