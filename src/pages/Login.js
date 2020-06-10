@@ -40,7 +40,7 @@ const Login = () => {
                 } catch (e) {
                     swal({
                         title: "Có lỗi xảy ra trong quá trình đăng nhập",
-                        icon: "fail",
+                        icon: "error",
                         button: false,
                         timer: 1500
                     }).then(r => r)
